@@ -87,6 +87,9 @@
 	.panel-content {
 		flex: var(--panel-content-flex, 1 1 auto);
 		min-height: var(--panel-content-min-height, 0);
+		height: 0; /* Explicit height allows children to use height: 100% */
 		overflow: hidden;
+		display: flex;
+		flex-direction: column;
 	}
 </style>

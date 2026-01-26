@@ -162,10 +162,11 @@
 		{/if}
 	</div>
 
-	{#if !$browserPodRunning}
-		<Spinner />
-	{:else}
-		<div class="portal-wrapper">
+	<div class="portal-content">
+		{#if !$browserPodRunning}
+			<Spinner />
+		{:else}
+			<div class="portal-wrapper">
 			<iframe bind:this={portalElement} class="portal" id="portal" title="Portal"></iframe>
 
 			{#if showPortalInfo && !isMobile && $portalUrl}
@@ -232,7 +233,8 @@
 				</div>
 			{/if}
 		</div>
-	{/if}
+		{/if}
+	</div>
 </Container>
 
 {#if isMobile && $portalUrl}
@@ -248,11 +250,26 @@
 {/if}
 
 <style>
-	.portal-wrapper {
-		position: relative;
+	.portal-content {
 		width: 100%;
 		height: 100%;
+		max-height: 100%;
+		display: flex;
+		flex-grow: 1;
+		flex-direction: column;
+		overflow: auto;
+		position: relative;
+	}
+
+	.portal-wrapper {
+		width: 100%;
+		height: 100%;
+		max-width: 100%;
+		max-height: 100%;
 		overflow: hidden;
+		position: relative;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.portal {
@@ -413,5 +430,22 @@
 	.mobile-portal-overlay .portal-url-container {
 		max-width: 18rem;
 		padding: 0.5rem;
+	}
+
+	.portal-controls {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		min-width: 0;
+	}
+
+	.preview-actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-left: auto;
+		width: 100%;
+		justify-content: flex-end;
+		min-width: 0;
 	}
 </style>
