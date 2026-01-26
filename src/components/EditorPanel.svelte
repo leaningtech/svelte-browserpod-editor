@@ -63,7 +63,7 @@
 
 <style>
 	.file-path {
-		color: var(--color-primary);
+		color: var(--bpe-color-primary);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -79,34 +79,34 @@
 		min-height: 0;
 		display: block;
 		background: transparent;
-		color: var(--editor-text-color);
+		color: var(--bpe-editor-text-color);
 	}
 
 	:global(.cm-editor .cm-cursor) {
-		border-left: 2px solid var(--editor-cursor-color) !important;
+		border-left: 2px solid var(--bpe-editor-cursor-color) !important;
 	}
 
 	:global(.cm-editor .cm-scroller) {
 		overflow: auto;
 		height: 100%;
-		font-family: var(--editor-font-family);
-		font-size: var(--editor-font-size);
+		font-family: var(--bpe-editor-font-family);
+		font-size: var(--bpe-editor-font-size);
 		background: transparent;
 	}
 
 	:global(.cm-editor .cm-gutters) {
-		background: var(--editor-gutter-bg);
-		border-right: 1px solid var(--editor-gutter-border);
-		color: var(--editor-gutter-text);
+		background: var(--bpe-editor-gutter-bg);
+		border-right: 1px solid var(--bpe-editor-gutter-border);
+		color: var(--bpe-editor-gutter-text);
 	}
 
 	:global(.cm-editor .cm-lineNumbers .cm-gutterElement) {
-		color: var(--editor-gutter-text);
+		color: var(--bpe-editor-gutter-text);
 		padding: 0 6px 0 3px;
 	}
 
 	:global(.cm-editor .cm-activeLine) {
-		background: var(--editor-active-line-bg);
+		background: var(--bpe-editor-active-line-bg);
 	}
 
 	:global(.cm-editor .cm-line) {

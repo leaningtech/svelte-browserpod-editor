@@ -361,13 +361,13 @@
 	}
 
 	.copy-action {
-		background: var(--color-primary);
-		color: var(--color-text-on-primary);
+		background: var(--bpe-color-primary);
+		color: var(--bpe-color-text-on-primary);
 	}
 
 	.close-action {
-		background: var(--color-button-secondary);
-		color: var(--color-text-on-primary);
+		background: var(--bpe-color-button-secondary);
+		color: var(--bpe-color-text-on-primary);
 	}
 
 	@keyframes fadeIn {
@@ -382,7 +382,7 @@
 	}
 
 	.mobile-portal-btn {
-		background: var(--color-primary);
+		background: var(--bpe-color-primary);
 		color: white;
 		padding: 0.5rem 1.25rem;
 		border-radius: 0.75rem;
@@ -396,8 +396,8 @@
 		gap: 0.25rem;
 		padding: 0.25rem 0.5rem;
 		border: none;
-		background: var(--color-bg-hover);
-		color: var(--color-text);
+		background: var(--bpe-color-bg-hover);
+		color: var(--bpe-color-text);
 		border-radius: 0.25rem;
 		cursor: pointer;
 		font-size: 0.75rem;
@@ -405,8 +405,8 @@
 	}
 
 	.view-btn:hover:not(:disabled) {
-		background: var(--color-primary);
-		color: var(--color-text-on-primary);
+		background: var(--bpe-color-primary);
+		color: var(--bpe-color-text-on-primary);
 	}
 
 	.view-btn:disabled {

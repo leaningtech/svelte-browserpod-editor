@@ -36,7 +36,7 @@
 
 	.loading-text {
 		font-size: 0.875rem;
-		color: var(--color-text-secondary);
+		color: var(--bpe-color-text-secondary);
 		margin: 0;
 	}
 

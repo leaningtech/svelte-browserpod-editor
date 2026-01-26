@@ -45,6 +45,6 @@
 		width: 100%;
 		height: 100%;
 		overflow: auto;
-		background-color: var(--color-terminal-bg);
+		background-color: var(--bpe-color-terminal-bg);
 	}
 </style>

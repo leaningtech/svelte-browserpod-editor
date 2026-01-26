@@ -100,17 +100,17 @@
 		background: none;
 		cursor: pointer;
 		transition: color 0.2s, background-color 0.2s;
-		color: var(--color-text-muted);
+		color: var(--bpe-color-text-muted);
 		border-radius: 0.25rem;
 	}
 
 	.terminal-tab:hover:not(.active) {
-		color: var(--color-text);
+		color: var(--bpe-color-text);
 	}
 
 	.terminal-tab.active {
-		color: var(--color-text-active);
-		background-color: var(--color-tab-active);
+		color: var(--bpe-color-text-active);
+		background-color: var(--bpe-color-tab-active);
 	}
 
 	.terminal-content {
@@ -120,7 +120,7 @@
 	}
 
 	.terminal-pane {
-		background-color: var(--color-terminal-bg);
+		background-color: var(--bpe-color-terminal-bg);
 		grid-area: 1 / 1;
 		border: none;
 		padding-left: 0.5rem;

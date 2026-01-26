@@ -21,9 +21,9 @@
 <button class="folder-btn" on:click={toggle}>
 	<div class="folder-icon">
 		{#if expanded}
-			<Icon width="16" icon="mdi:folder-open" color="var(--color-primary)"/>
+			<Icon width="16" icon="mdi:folder-open" color="var(--bpe-color-primary)"/>
 		{:else}
-			<Icon width="16" icon="mdi:folder" color="var(--color-primary)"/>
+			<Icon width="16" icon="mdi:folder" color="var(--bpe-color-primary)"/>
 		{/if}
 	</div>
 	<span class="folder-name">{name}</span>
@@ -61,15 +61,15 @@
 		background: none;
 		cursor: pointer;
 		text-align: left;
-		border-radius: var(--radius-button);
+		border-radius: var(--bpe-radius-button);
 		transition: all 0.2s ease;
-		color: var(--color-text);
+		color: var(--bpe-color-text);
 		font-size: 0.875rem;
 	}
 
 	.folder-btn:hover {
-		background: var(--color-bg-hover);
-		color: var(--color-primary);
+		background: var(--bpe-color-bg-hover);
+		color: var(--bpe-color-primary);
 	}
 
 	.folder-icon {
@@ -103,7 +103,7 @@
 		list-style: none;
 		margin: 0;
 		padding: 0 0 0 1rem;
-		border-left: 1px solid var(--color-border);
+		border-left: 1px solid var(--bpe-color-border);
 		margin-left: 0.5rem;
 	}
 
@@ -120,6 +120,6 @@
 		top: 1rem;
 		width: 0.75rem;
 		height: 1px;
-		background: var(--color-border);
+		background: var(--bpe-color-border);
 	}
 </style>

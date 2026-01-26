@@ -45,15 +45,15 @@
 		background: none;
 		cursor: pointer;
 		text-align: left;
-		border-radius: var(--radius-button);
+		border-radius: var(--bpe-radius-button);
 		transition: all 0.2s ease;
-		color: var(--color-text);
+		color: var(--bpe-color-text);
 		font-size: 0.875rem;
 		position: relative;
 	}
 
 	.file-btn:hover {
-		background: var(--color-bg-hover);
+		background: var(--bpe-color-bg-hover);
 	}
 
 	.file-btn:disabled {
@@ -62,12 +62,12 @@
 	}
 
 	.file-btn.selected {
-		background: var(--color-primary);
-		color: var(--color-text-on-primary);
+		background: var(--bpe-color-primary);
+		color: var(--bpe-color-text-on-primary);
 	}
 
 	.file-btn.selected:hover {
-		background: var(--color-primary-hover);
+		background: var(--bpe-color-primary-hover);
 	}
 
 	.file-icon {

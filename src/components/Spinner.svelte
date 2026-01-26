@@ -18,7 +18,7 @@
 		display: grid;
 		border: 4px solid #0000;
 		border-radius: 50%;
-		border-right-color: var(--color-spinner);
+		border-right-color: var(--bpe-color-spinner);
 		animation: l15 1s infinite linear;
 	}
 	.loader::before,

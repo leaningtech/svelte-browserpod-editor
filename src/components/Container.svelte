@@ -11,7 +11,7 @@
 <div class="panel {className}" {...$$restProps}>
 	<header class="panel-header">
 		<span class="panel-title-container">
-			<Icon icon={icon} width='14' color='var(--color-text)'/>
+			<Icon icon={icon} width='14' color='var(--bpe-color-text)'/>
 			<span class="panel-title">{title}</span>
 			<!-- Inline header slot for arbitrary content -->
 			<slot name="headerInline"></slot>
@@ -30,10 +30,10 @@
 
 <style>
 	.panel {
-		border-radius: var(--radius-panel);
-		box-shadow: var(--shadow-panel);
+		border-radius: var(--bpe-radius-panel);
+		box-shadow: var(--bpe-shadow-panel);
 		overflow: hidden;
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--bpe-color-border);
 		display: flex;
 		flex-direction: column;
 		min-height: 0;
@@ -47,16 +47,16 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--bpe-color-border);
 		padding: 0.375rem 0.75rem;
 		background: linear-gradient(
 			to bottom,
-			var(--color-panel-header-start),
-			var(--color-panel-header-end)
+			var(--bpe-color-panel-header-start),
+			var(--bpe-color-panel-header-end)
 		);
-		border-top-left-radius: var(--radius-panel);
-		border-top-right-radius: var(--radius-panel);
-		box-shadow: var(--shadow-header);
+		border-top-left-radius: var(--bpe-radius-panel);
+		border-top-right-radius: var(--bpe-radius-panel);
+		box-shadow: var(--bpe-shadow-header);
 	}
 
 	.panel-title-container {
@@ -69,7 +69,7 @@
 	.panel-title {
 		margin: 0;
 		font-size: 0.75rem;
-		color: var(--color-text);
+		color: var(--bpe-color-text);
 		font-weight: 600;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
@@ -89,8 +89,8 @@
 	}
 
 	.panel-content {
-		flex: var(--panel-content-flex, 1 1 auto);
-		min-height: var(--panel-content-min-height, 0);
+		flex: var(--bpe-panel-content-flex, 1 1 auto);
+		min-height: var(--bpe-panel-content-min-height, 0);
 		height: 0; /* Explicit height allows children to use height: 100% */
 		overflow: hidden;
 		display: flex;

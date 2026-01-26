@@ -17,7 +17,7 @@
 
 <style>
 	.current-file {
-		color: var(--color-primary);
+		color: var(--bpe-color-primary);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
