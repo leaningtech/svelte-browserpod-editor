@@ -37,6 +37,10 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 0;
+		/* Fill parent container in any layout context */
+		flex: 1;
+		width: 100%;
+		height: 100%;
 	}
 
 	.panel-header {

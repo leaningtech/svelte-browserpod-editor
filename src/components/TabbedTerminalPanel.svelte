@@ -18,6 +18,9 @@
 	/** Icon for the container */
 	export let icon = 'mdi:terminal';
 
+	let className = '';
+	export { className as class };
+
 	const ctx = getBrowserPodEditorContext();
 
 	// Track which lazy tabs have been started
@@ -56,7 +59,7 @@
 <Container
 	{title}
 	{icon}
-	class="terminal-panel"
+	class={className}
 >
 	<div class="tabbed-terminal" slot="actions">
 		{#each tabs as tab}

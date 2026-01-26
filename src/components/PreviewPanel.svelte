@@ -7,6 +7,9 @@
 	import { getBrowserPodEditorContext } from '../context';
 	import { trackEvent } from '../utils';
 
+	let className = '';
+	export { className as class };
+
 	const { browserPodRunning, portalUrl } = getBrowserPodEditorContext();
 
 	let portalElement: HTMLIFrameElement;
@@ -124,7 +127,7 @@
 <Container
 	title="Preview"
 	icon="mdi:link"
-	class="portal-panel"
+	class={className}
 	actionsFullWidth={true}
 >
 	<div slot="actions" class="portal-controls preview-actions">

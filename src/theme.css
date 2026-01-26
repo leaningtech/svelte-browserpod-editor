@@ -46,4 +46,14 @@
   /* ===== Sizing ===== */
   --radius-panel: 12px;
   --radius-button: 0.375rem;
+
+  /* ===== CodeMirror Editor ===== */
+  --editor-font-family: "Fira Code", "JetBrains Mono", monospace;
+  --editor-font-size: 0.85rem;
+  --editor-text-color: rgba(255, 255, 255, 0.9);
+  --editor-cursor-color: white;
+  --editor-gutter-bg: rgba(0, 0, 0, 0.2);
+  --editor-gutter-border: rgba(255, 255, 255, 0.15);
+  --editor-gutter-text: rgba(255, 255, 255, 0.5);
+  --editor-active-line-bg: rgba(255, 255, 255, 0.05);
 }

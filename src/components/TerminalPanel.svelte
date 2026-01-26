@@ -13,6 +13,9 @@
 	/** Stop executing if a command fails (default: true) */
 	export let stopOnError = true;
 
+	let className = '';
+	export { className as class };
+
 	const ctx = getBrowserPodEditorContext();
 
 	onMount(() => {
@@ -32,8 +35,7 @@
 <Container
 	{title}
 	{icon}
-	class="terminal-panel"
-	style="flex: 1; min-height: 0"
+	class={className}
 >
 	<div class="console" id={terminalId}></div>
 </Container>
