@@ -68,16 +68,12 @@ export interface BrowserPodEditorProps {
   showPreview?: boolean;
   /** Optional BrowserPod API domain */
   apiDomain?: string;
-  /** Optional BrowserPod version number OR full source URL */
-  version?: string;
   /** Terminal tabs configuration */
   terminalTabs?: TerminalTab[];
 }
 
 export interface BrowserPodServiceOptions {
   apiKey: string;
-  /** Version number OR full alternative URL */
-  version?: string;
   apiDomain?: string;
   onPortal?: (url: string) => void;
   onError?: (error: Error) => void;

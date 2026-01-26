@@ -1,29 +1,22 @@
 /**
  * BrowserPodService - Class-based wrapper for BrowserPod
  */
+import { BrowserPod } from '@leaningtech/browserpod';
 import type { BrowserPodServiceOptions, ProjectFile } from '../types';
 import { trackEvent } from '../utils';
-
-const BROWSERPOD_VERSION = '0.9.8';
 
 export class BrowserPodService {
   private pod: any = null;
   private terminals: Map<string, any> = new Map();
   private defaultTerminalId: string | null = null;
   private apiKey: string;
-  private version: string;
   private apiDomain?: string;
-  private browserPodSource?: string;
   private onPortal?: (url: string) => void;
   private onError?: (error: Error) => void;
 
   constructor(options: BrowserPodServiceOptions) {
-    const version = options.version || BROWSERPOD_VERSION;
-    const versionIsSource = version.startsWith("http");
     this.apiKey = options.apiKey;
-    this.version = versionIsSource? "dev" : version;
     this.apiDomain = options.apiDomain;
-    this.browserPodSource = versionIsSource? version : `https://rt.browserpod.io/${version}/browserpod.js`;
     this.onPortal = options.onPortal;
     this.onError = options.onError;
   }
@@ -33,10 +26,6 @@ export class BrowserPodService {
    */
   async boot(): Promise<void> {
     try {
-      // Use Function constructor to bypass Vite's static analysis of dynamic imports
-      const dynamicImport = new Function('url', 'return import(url)');
-      const { BrowserPod } = await dynamicImport(this.browserPodSource);
-
       const bootOptions: { apiKey: string; apiDomain?: string } = {
         apiKey: this.apiKey,
       };

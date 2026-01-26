@@ -11,7 +11,6 @@
 	export let apiKey: string;
 	export let defaultFile = '';
 	export let apiDomain: string | undefined = undefined;
-	export let version: string | undefined = undefined;
 
 	const dispatch = createEventDispatcher<{
 		ready: { service: BrowserPodService };
@@ -89,7 +88,6 @@
 		service = new BrowserPodService({
 			apiKey,
 			apiDomain,
-			version,
 			onPortal: (url) => {
 				portalUrl.set(url);
 				browserPodRunning.set(true);
