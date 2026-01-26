@@ -97,17 +97,17 @@
 		background: none;
 		cursor: pointer;
 		transition: color 0.2s, background-color 0.2s;
-		color: rgb(113, 113, 122);
+		color: var(--color-text-muted);
 		border-radius: 0.25rem;
 	}
 
 	.terminal-tab:hover:not(.active) {
-		color: rgb(212, 212, 216);
+		color: var(--color-text);
 	}
 
 	.terminal-tab.active {
-		color: white;
-		background-color: rgba(255, 255, 255, 0.08);
+		color: var(--color-text-active);
+		background-color: var(--color-tab-active);
 	}
 
 	.terminal-content {
@@ -117,7 +117,7 @@
 	}
 
 	.terminal-pane {
-		background-color: rgb(9, 9, 11);
+		background-color: var(--color-terminal-bg);
 		grid-area: 1 / 1;
 		border: none;
 		padding-left: 0.5rem;

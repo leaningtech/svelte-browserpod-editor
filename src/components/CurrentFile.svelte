@@ -17,7 +17,7 @@
 
 <style>
 	.current-file {
-		color: var(--color-primary, #34d399);
+		color: var(--color-primary);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;

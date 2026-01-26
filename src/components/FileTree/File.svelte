@@ -45,15 +45,15 @@
 		background: none;
 		cursor: pointer;
 		text-align: left;
-		border-radius: 0.375rem;
+		border-radius: var(--radius-button);
 		transition: all 0.2s ease;
-		color: var(--color-text, #374151);
+		color: var(--color-text);
 		font-size: 0.875rem;
 		position: relative;
 	}
 
 	.file-btn:hover {
-		background: var(--color-bg-hover, #f3f4f6);
+		background: var(--color-bg-hover);
 	}
 
 	.file-btn:disabled {
@@ -62,25 +62,12 @@
 	}
 
 	.file-btn.selected {
-		background: var(--color-primary, #3b82f6);
-		color: white;
+		background: var(--color-primary);
+		color: var(--color-text-on-primary);
 	}
 
 	.file-btn.selected:hover {
-		background: var(--color-primary-hover, #2563eb);
-	}
-
-	:global(.dark) .file-btn {
-		color: var(--color-text, #d1d5db);
-	}
-
-	:global(.dark) .file-btn:hover {
-		background: var(--color-bg-hover, #374151);
-	}
-
-	:global(.dark) .file-btn.selected {
-		background: var(--color-primary, #3b82f6);
-		color: white;
+		background: var(--color-primary-hover);
 	}
 
 	.file-icon {

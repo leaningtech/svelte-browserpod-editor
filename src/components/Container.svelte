@@ -3,13 +3,12 @@
 	export let title = "Editor";
 	export let icon = "mdi:code-braces";
 	export let actionsFullWidth = false;
+
+	let className = '';
+	export { className as class };
 </script>
 
-<div class="panel" {...$$restProps} style="
-		border-radius: 12px;
-		box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-		overflow: hidden;
-		border: 1px solid var(--color-border);">
+<div class="panel {className}" {...$$restProps}>
 	<header class="panel-header">
 		<span class="panel-title-container">
 			<Icon icon={icon} width='14' color='var(--color-text)'/>
@@ -19,9 +18,7 @@
 		</span>
 		<div
 			class="panel-actions"
-			style={actionsFullWidth
-				? "margin-left: 12px; display: flex; align-items: center; gap: 6px; flex: 1 1 auto; min-width: 0;"
-				: "margin-left: auto; display: flex; align-items: center; gap: 6px;"}
+			class:full-width={actionsFullWidth}
 		>
 			<slot name="actions"></slot>
 		</div>
@@ -30,3 +27,66 @@
 		<slot/>
 	</div>
 </div>
+
+<style>
+	.panel {
+		border-radius: var(--radius-panel);
+		box-shadow: var(--shadow-panel);
+		overflow: hidden;
+		border: 1px solid var(--color-border);
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+	}
+
+	.panel-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid var(--color-border);
+		padding: 0.375rem 0.75rem;
+		background: linear-gradient(
+			to bottom,
+			var(--color-panel-header-start),
+			var(--color-panel-header-end)
+		);
+		border-top-left-radius: var(--radius-panel);
+		border-top-right-radius: var(--radius-panel);
+		box-shadow: var(--shadow-header);
+	}
+
+	.panel-title-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.panel-title {
+		margin: 0;
+		font-size: 0.75rem;
+		color: var(--color-text);
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.panel-actions {
+		margin-left: auto;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.panel-actions.full-width {
+		margin-left: 12px;
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.panel-content {
+		flex: var(--panel-content-flex, 1 1 auto);
+		min-height: var(--panel-content-min-height, 0);
+		overflow: hidden;
+	}
+</style>

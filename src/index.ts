@@ -1,5 +1,11 @@
 /**
  * BrowserPodEditor - A Svelte component library for in-browser code editors
+ *
+ * CSS Theme:
+ *   Import the default theme to get sensible CSS variable defaults:
+ *   import '@leaningtech/browserpod-editor/theme.css';
+ *
+ *   Or define your own CSS variables (see theme.css for the full list).
  */
 
 // Main provider component

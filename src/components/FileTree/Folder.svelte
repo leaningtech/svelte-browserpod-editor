@@ -61,23 +61,15 @@
 		background: none;
 		cursor: pointer;
 		text-align: left;
-		border-radius: 0.375rem;
+		border-radius: var(--radius-button);
 		transition: all 0.2s ease;
-		color: var(--color-text, #374151);
+		color: var(--color-text);
 		font-size: 0.875rem;
 	}
 
 	.folder-btn:hover {
-		background: var(--color-bg-hover, #f3f4f6);
-		color: var(--color-primary, #3b82f6);
-	}
-
-	:global(.dark) .folder-btn {
-		color: var(--color-text, #d1d5db);
-	}
-
-	:global(.dark) .folder-btn:hover {
-		background: var(--color-bg-hover, #374151);
+		background: var(--color-bg-hover);
+		color: var(--color-primary);
 	}
 
 	.folder-icon {
@@ -111,12 +103,8 @@
 		list-style: none;
 		margin: 0;
 		padding: 0 0 0 1rem;
-		border-left: 1px solid var(--color-border, #e5e7eb);
+		border-left: 1px solid var(--color-border);
 		margin-left: 0.5rem;
-	}
-
-	:global(.dark) .tree-items-list {
-		border-left-color: var(--color-border, #374151);
 	}
 
 	.tree-item {
@@ -132,10 +120,6 @@
 		top: 1rem;
 		width: 0.75rem;
 		height: 1px;
-		background: var(--color-border, #e5e7eb);
-	}
-
-	:global(.dark) .tree-item::before {
-		background: var(--color-border, #374151);
+		background: var(--color-border);
 	}
 </style>

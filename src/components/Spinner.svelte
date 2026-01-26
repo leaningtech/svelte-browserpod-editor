@@ -18,11 +18,11 @@
 		display: grid;
 		border: 4px solid #0000;
 		border-radius: 50%;
-		border-right-color: var(--color-primary);
+		border-right-color: var(--color-spinner);
 		animation: l15 1s infinite linear;
 	}
 	.loader::before,
-	.loader::after {    
+	.loader::after {
 		content: "";
 		grid-area: 1/1;
 		margin: 2px;
@@ -34,7 +34,7 @@
 		margin: 8px;
 		animation-duration: 3s;
 	}
-	@keyframes l15{ 
+	@keyframes l15{
 		100%{transform: rotate(1turn)}
 	}
 </style>

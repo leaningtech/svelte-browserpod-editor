@@ -342,12 +342,12 @@
 
 	.copy-action {
 		background: var(--color-primary);
-		color: white;
+		color: var(--color-text-on-primary);
 	}
 
 	.close-action {
-		background: #64748b;
-		color: white;
+		background: var(--color-button-secondary);
+		color: var(--color-text-on-primary);
 	}
 
 	@keyframes fadeIn {
@@ -376,8 +376,8 @@
 		gap: 0.25rem;
 		padding: 0.25rem 0.5rem;
 		border: none;
-		background: var(--color-bg-hover, #374151);
-		color: var(--color-text, #d1d5db);
+		background: var(--color-bg-hover);
+		color: var(--color-text);
 		border-radius: 0.25rem;
 		cursor: pointer;
 		font-size: 0.75rem;
@@ -385,8 +385,8 @@
 	}
 
 	.view-btn:hover:not(:disabled) {
-		background: var(--color-primary, #3b82f6);
-		color: white;
+		background: var(--color-primary);
+		color: var(--color-text-on-primary);
 	}
 
 	.view-btn:disabled {
