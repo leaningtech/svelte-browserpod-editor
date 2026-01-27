@@ -238,19 +238,18 @@
 		</div>
 		{/if}
 	</div>
+	{#if isMobile && $portalUrl}
+		<div class="mobile-portal-btn-container">
+			<button
+				class="view-btn mobile-portal-btn"
+				on:click={toggleMobilePortal}
+			>
+				<Icon icon={showMobilePortal ? "mdi:eye-off" : "mdi:qrcode"} class="mr-2" width="16" height="16" />
+				{showMobilePortal ? "Hide QR Code" : "Show Portal QR Code"}
+			</button>
+		</div>
+	{/if}
 </Container>
-
-{#if isMobile && $portalUrl}
-	<div class="mobile-portal-btn-container">
-		<button
-			class="view-btn mobile-portal-btn"
-			on:click={toggleMobilePortal}
-		>
-			<Icon icon={showMobilePortal ? "mdi:eye-off" : "mdi:qrcode"} class="mr-2" width="16" height="16" />
-			{showMobilePortal ? "Hide QR Code" : "Show Portal QR Code"}
-		</button>
-	</div>
-{/if}
 
 <style>
 	.portal-content {
