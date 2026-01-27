@@ -16,7 +16,7 @@ npm install @leaningtech/svelte-browserpod-editor
     BrowserPodEditorProvider,
     EditorPanel,
     PreviewPanel,
-    TabbedTerminalPanel,
+    TerminalPanel,
     FileTree
   } from '@leaningtech/svelte-browserpod-editor';
   import '@leaningtech/svelte-browserpod-editor/theme.css';
@@ -29,7 +29,7 @@ npm install @leaningtech/svelte-browserpod-editor
   <FileTree />
   <EditorPanel />
   <PreviewPanel />
-  <TabbedTerminalPanel tabs={[
+  <TerminalPanel tabs={[
     { id: 'dev', label: 'Dev', commands: [['npm', 'run', 'dev']], autoRun: true }
   ]} />
 </BrowserPodEditorProvider>
@@ -42,8 +42,7 @@ npm install @leaningtech/svelte-browserpod-editor
 | `BrowserPodEditorProvider` | Required wrapper that provides context to all child components |
 | `EditorPanel` | CodeMirror-based code editor |
 | `PreviewPanel` | Live preview iframe with optional QR code overlay |
-| `TerminalPanel` | Single terminal instance |
-| `TabbedTerminalPanel` | Multi-tab terminal interface |
+| `TerminalPanel` | Terminal with optional tabs (tab bar hidden for single terminal) |
 | `FileTree` | File browser with folder navigation |
 | `CurrentFile` | Displays the currently selected filename |
 
@@ -66,7 +65,7 @@ appropriate CORS headers if used cross-origin):
 ## Terminal Configuration
 
 ```svelte
-<TabbedTerminalPanel tabs={[
+<TerminalPanel tabs={[
   {
     id: 'install',
     label: 'Install',

@@ -15,7 +15,6 @@ export { default as BrowserPodEditorProvider } from './BrowserPodEditorProvider.
 export { default as EditorPanel } from './components/EditorPanel.svelte';
 export { default as PreviewPanel } from './components/PreviewPanel.svelte';
 export { default as TerminalPanel } from './components/TerminalPanel.svelte';
-export { default as TabbedTerminalPanel } from './components/TabbedTerminalPanel.svelte';
 export { default as FileTree } from './components/FileTree.svelte';
 export { default as CurrentFile } from './components/CurrentFile.svelte';
 export { default as Container } from './components/Container.svelte';

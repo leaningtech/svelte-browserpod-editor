@@ -15,8 +15,7 @@ svelte-browserpod-editor/
 │   ├── components/
 │   │   ├── EditorPanel.svelte      # CodeMirror editor
 │   │   ├── PreviewPanel.svelte     # Portal iframe + QR overlay
-│   │   ├── TerminalPanel.svelte    # Single terminal
-│   │   ├── TabbedTerminalPanel.svelte  # Multi-tab terminal
+│   │   ├── TerminalPanel.svelte      # Terminal (single or tabbed)
 │   │   ├── FileTree.svelte         # File browser (handles loading state)
 │   │   ├── FileTree/Folder.svelte  # Internal: folder node
 │   │   ├── FileTree/File.svelte    # Internal: file node
@@ -42,7 +41,7 @@ svelte-browserpod-editor/
 <BrowserPodEditorProvider {projectSource} {apiKey}>
   <EditorPanel />
   <PreviewPanel />
-  <TabbedTerminalPanel tabs={...} />
+  <TerminalPanel tabs={...} />
 </BrowserPodEditorProvider>
 ```
 
@@ -115,7 +114,7 @@ Panel components accept a `class` prop but don't provide default layout. The idi
   <EditorPanel />
 </div>
 <div class="terminal-slot">
-  <TabbedTerminalPanel tabs={...} />
+  <TerminalPanel tabs={...} />
 </div>
 <div class="preview-slot">
   <PreviewPanel />

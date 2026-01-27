@@ -2,23 +2,31 @@
 	import { onMount, onDestroy } from 'svelte';
 	import Container from './Container.svelte';
 	import { getBrowserPodEditorContext } from '../context';
+	import type { TerminalTab } from '../types';
 
-	export let terminalId = 'console';
+	/** Configuration for terminal tabs */
+	export let tabs: TerminalTab[] = [
+		{ id: 'terminal', label: 'Terminal', commands: [['/npm/bin/npm.js', 'install']], autoRun: true },
+	];
+
+	/** Initially active tab ID */
+	export let activeTab: string = tabs[0]?.id || '';
+
+	/** Title for the container */
 	export let title = 'Terminal';
+
+	/** Icon for the container */
 	export let icon = 'mdi:terminal';
-	/** Sequential commands to run: [[executable, ...args], ...] */
-	export let commands: string[][] | undefined = undefined;
-	/** Whether to auto-run the commands when BrowserPod is ready */
-	export let autoRun = false;
-	/** Stop executing if a command fails (default: true) */
-	export let stopOnError = true;
 
 	let className = '';
 	export { className as class };
 
 	const ctx = getBrowserPodEditorContext();
 
-	let consoleEl: HTMLDivElement;
+	// Track which lazy tabs have been started
+	let startedTabs = new Set<string>();
+
+	let contentEl: HTMLDivElement;
 	let resizeObserver: ResizeObserver;
 
 	function fitTerminal(xterm: any, container: HTMLElement) {
@@ -41,26 +49,45 @@
 	}
 
 	onMount(() => {
-		ctx.registerTerminal({
-			id: terminalId,
-			commands,
-			autoRun,
-			stopOnError
-		});
+		// Register all terminals
+		for (const tab of tabs) {
+			ctx.registerTerminal({
+				id: tab.id,
+				commands: tab.commands,
+				autoRun: tab.autoRun ?? false,
+				stopOnError: tab.stopOnError ?? true
+			});
+		}
 
 		resizeObserver = new ResizeObserver(() => {
-			const terminal = ctx.getTerminal(terminalId);
-			if (terminal?.xterm) {
-				fitTerminal(terminal.xterm, consoleEl);
+			for (const tab of tabs) {
+				const terminal = ctx.getTerminal(tab.id);
+				const pane = document.getElementById(tab.id);
+				if (terminal?.xterm && pane) {
+					fitTerminal(terminal.xterm, pane);
+				}
 			}
 		});
-		resizeObserver.observe(consoleEl);
+		resizeObserver.observe(contentEl);
 	});
 
 	onDestroy(() => {
 		resizeObserver?.disconnect();
-		ctx.unregisterTerminal(terminalId);
+		for (const tab of tabs) {
+			ctx.unregisterTerminal(tab.id);
+		}
 	});
+
+	function handleTabClick(tab: TerminalTab) {
+		activeTab = tab.id;
+
+		// Handle lazy-start terminals
+		if (tab.runOnActivate && tab.commands && tab.commands.length > 0 && !startedTabs.has(tab.id)) {
+			startedTabs.add(tab.id);
+			startedTabs = startedTabs; // trigger reactivity
+			ctx.runCommands(tab.id, tab.commands, tab.stopOnError ?? true);
+		}
+	}
 </script>
 
 <Container
@@ -68,14 +95,76 @@
 	{icon}
 	class={className}
 >
-	<div class="console" id={terminalId} bind:this={consoleEl}></div>
+	<div class="tabbed-terminal" slot="actions">
+		{#if tabs.length > 1}
+			{#each tabs as tab}
+				<button
+					type="button"
+					class="terminal-tab"
+					class:active={activeTab === tab.id}
+					onclick={() => handleTabClick(tab)}
+				>
+					{tab.label}
+				</button>
+			{/each}
+		{/if}
+	</div>
+
+	<div class="terminal-content" bind:this={contentEl}>
+		{#each tabs as tab}
+			<div
+				class="terminal-pane"
+				class:active={activeTab === tab.id}
+				id={tab.id}
+			></div>
+		{/each}
+	</div>
 </Container>
 
 <style>
-	.console {
+	.tabbed-terminal {
+		display: flex;
+		align-items: center;
+		margin-left: auto;
+	}
+
+	.terminal-tab {
+		font-size: 0.75rem;
+		font-weight: 500;
+		padding: 0.25rem 0.5rem;
+		border: none;
+		background: none;
+		cursor: pointer;
+		transition: color 0.2s, background-color 0.2s;
+		color: var(--bpe-color-text-muted);
+		border-radius: 0.25rem;
+	}
+
+	.terminal-tab:hover:not(.active) {
+		color: var(--bpe-color-text);
+	}
+
+	.terminal-tab.active {
+		color: var(--bpe-color-text-active);
+		background-color: var(--bpe-color-tab-active);
+	}
+
+	.terminal-content {
+		display: grid;
 		width: 100%;
 		height: 100%;
-		overflow: auto;
+	}
+
+	.terminal-pane {
 		background-color: var(--bpe-color-terminal-bg);
+		grid-area: 1 / 1;
+		border: none;
+		padding-left: 0.5rem;
+		overflow: hidden;
+		visibility: hidden;
+	}
+
+	.terminal-pane.active {
+		visibility: visible;
 	}
 </style>
