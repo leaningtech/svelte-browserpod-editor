@@ -1,5 +1,5 @@
 {
-  "name": "@leaningtech/browserpod-editor",
+  "name": "@leaningtech/svelte-browserpod-editor",
   "version": "0.1.0",
   "description": "A reusable Svelte component for in-browser code editing with BrowserPod",
   "type": "module",
