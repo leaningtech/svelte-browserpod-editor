@@ -26,6 +26,28 @@
 	// Track which lazy tabs have been started
 	let startedTabs = new Set<string>();
 
+	let contentEl: HTMLDivElement;
+	let resizeObserver: ResizeObserver;
+
+	function fitTerminal(xterm: any, container: HTMLElement) {
+		if (!xterm || !container) return;
+
+		const core = xterm._core;
+		const dims = core._renderService?.dimensions;
+		if (!dims) return;
+
+		const cellWidth = dims.css.cell.width;
+		const cellHeight = dims.css.cell.height;
+		if (!cellWidth || !cellHeight) return;
+
+		const cols = Math.max(2, Math.floor(container.clientWidth / cellWidth));
+		const rows = Math.max(1, Math.floor(container.clientHeight / cellHeight));
+
+		if (xterm.cols !== cols || xterm.rows !== rows) {
+			xterm.resize(cols, rows);
+		}
+	}
+
 	onMount(() => {
 		// Register all terminals
 		for (const tab of tabs) {
@@ -36,9 +58,21 @@
 				stopOnError: tab.stopOnError ?? true
 			});
 		}
+
+		resizeObserver = new ResizeObserver(() => {
+			for (const tab of tabs) {
+				const terminal = ctx.getTerminal(tab.id);
+				const pane = document.getElementById(tab.id);
+				if (terminal?.xterm && pane) {
+					fitTerminal(terminal.xterm, pane);
+				}
+			}
+		});
+		resizeObserver.observe(contentEl);
 	});
 
 	onDestroy(() => {
+		resizeObserver?.disconnect();
 		for (const tab of tabs) {
 			ctx.unregisterTerminal(tab.id);
 		}
@@ -74,7 +108,7 @@
 		{/each}
 	</div>
 
-	<div class="terminal-content">
+	<div class="terminal-content" bind:this={contentEl}>
 		{#each tabs as tab}
 			<div
 				class="terminal-pane"

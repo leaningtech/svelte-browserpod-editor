@@ -2,7 +2,7 @@
  * BrowserPodEditor Svelte context for child state management
  */
 import { getContext, setContext } from 'svelte';
-import { writable, type Writable } from 'svelte/store';
+import { get, writable, type Writable } from 'svelte/store';
 import type { TreeNode, TerminalConfig, EditorConfig } from './types';
 
 const CONTEXT_KEY = Symbol('BrowserPodEditor');
@@ -36,6 +36,8 @@ export interface BrowserPodEditorContext {
   runCommand: (terminalId: string, command: string[]) => Promise<void>;
   /** Run multiple commands sequentially in a specific terminal */
   runCommands: (terminalId: string, commands: string[][], stopOnError?: boolean) => Promise<void>;
+  /** Get a terminal instance by ID */
+  getTerminal: (id: string) => any;
   /** Register an editor panel and return assigned ID */
   registerEditor: () => number;
   /** Unregister an editor panel */
@@ -84,6 +86,7 @@ export function createBrowserPodEditorContext(): BrowserPodEditorContext {
     },
     runCommand: async () => {},
     runCommands: async () => {},
+    getTerminal: (id: string) => get(terminals).get(id)?.terminal,
     registerEditor: () => {
       const id = nextEditorId++;
       editors.update(map => {
@@ -104,15 +107,11 @@ export function createBrowserPodEditorContext(): BrowserPodEditorContext {
       // If active editor unmounts, activate lowest remaining ID (or null)
       activeEditorId.update(currentActive => {
         if (currentActive === id) {
-          let currentMap: Map<number, EditorConfig> = new Map();
-          const unsubscribe = editors.subscribe(m => { currentMap = m; });
-          unsubscribe();
+          const currentMap = get(editors);
           if (currentMap.size === 0) {
             return null;
           }
-          // Find lowest ID
-          const lowestId = Math.min(...currentMap.keys());
-          return lowestId;
+          return Math.min(...currentMap.keys());
         }
         return currentActive;
       });
@@ -130,11 +129,9 @@ export function createBrowserPodEditorContext(): BrowserPodEditorContext {
       });
     },
     openFileInActiveEditor: (path: string) => {
-      let currentActiveId: number | null = null;
-      const unsubscribe = activeEditorId.subscribe(id => { currentActiveId = id; });
-      unsubscribe();
+      const currentActiveId = get(activeEditorId);
       if (currentActiveId !== null) {
-        context.openFileInEditor(currentActiveId as number, path);
+        context.openFileInEditor(currentActiveId, path);
       }
     },
   };
