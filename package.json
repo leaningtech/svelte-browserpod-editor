@@ -2,6 +2,7 @@
   "name": "@leaningtech/svelte-browserpod-editor",
   "version": "0.1.0",
   "description": "A reusable Svelte component for in-browser code editing with BrowserPod",
+  "license": "MIT",
   "type": "module",
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",
