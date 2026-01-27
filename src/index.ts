@@ -48,6 +48,7 @@ export type {
   ErrorEventDetail,
   TerminalConfig,
   TerminalTab,
+  EditorConfig,
 } from './types';
 
 // Utilities

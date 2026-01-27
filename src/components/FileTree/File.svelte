@@ -2,7 +2,7 @@
 	import Icon from "@iconify/svelte";
 	import { getBrowserPodEditorContext } from '../../context';
 
-	const { fileSysReady, selectedFile } = getBrowserPodEditorContext();
+	const { fileSysReady, editors, openFileInActiveEditor } = getBrowserPodEditorContext();
 
 	export let name: string;
 	export let parent: string;
@@ -19,13 +19,15 @@
 		svg: 'vscode-icons:file-type-svg'
 	};
 
-	$: isSelected = $selectedFile === `${parent}/${name}`;
+	// Check if any editor has this file open
+	$: filePath = `${parent}/${name}`;
+	$: isSelected = [...$editors.values()].some(e => e.filePath === filePath);
 </script>
 
 <button
 	class="file-btn"
 	class:selected={isSelected}
-	on:click={() => selectedFile.set(`${parent}/${name}`)}
+	on:click={() => openFileInActiveEditor(filePath)}
 	disabled={!$fileSysReady}
 >
 	<div class="file-icon">

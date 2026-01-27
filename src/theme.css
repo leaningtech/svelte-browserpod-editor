@@ -56,4 +56,7 @@
   --bpe-editor-gutter-border: rgba(255, 255, 255, 0.15);
   --bpe-editor-gutter-text: rgba(255, 255, 255, 0.5);
   --bpe-editor-active-line-bg: rgba(255, 255, 255, 0.05);
+
+  /* ===== Multi-Editor ===== */
+  --bpe-border-editor-active: 2px solid var(--bpe-color-primary);
 }

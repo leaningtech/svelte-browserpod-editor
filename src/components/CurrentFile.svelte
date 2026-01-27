@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getBrowserPodEditorContext } from '../context';
 
-	const { selectedFile } = getBrowserPodEditorContext();
+	const { editors, activeEditorId } = getBrowserPodEditorContext();
 
 	/** Transform the file path for display (default: uppercase) */
 	export let transform: (path: string) => string = (p) => p.toUpperCase();
@@ -9,10 +9,13 @@
 	/** Optional class for styling */
 	let className = '';
 	export { className as class };
+
+	// Get file path from active editor
+	$: filePath = $activeEditorId !== null ? $editors.get($activeEditorId)?.filePath ?? '' : '';
 </script>
 
 <span class="current-file {className}">
-	{transform($selectedFile || '')}
+	{transform(filePath)}
 </span>
 
 <style>

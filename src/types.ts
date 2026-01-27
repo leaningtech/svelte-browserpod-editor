@@ -119,3 +119,10 @@ export interface TerminalTab {
   /** Stop executing if a command fails (default: true) */
   stopOnError?: boolean;
 }
+
+export interface EditorConfig {
+  /** Unique identifier for the editor */
+  id: number;
+  /** Currently open file path (empty if no file open) */
+  filePath: string;
+}

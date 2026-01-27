@@ -20,7 +20,7 @@
 
 	// Create component-local context
 	const ctx = createBrowserPodEditorContext();
-	const { browserPodRunning, fileSysReady, selectedFile, fileContent, portalUrl, fileTree, terminals } = ctx;
+	const { browserPodRunning, fileSysReady, portalUrl, fileTree, terminals } = ctx;
 
 	let service: BrowserPodService | null = null;
 
@@ -54,22 +54,7 @@
 		}
 	};
 
-	// Subscribe to selected file changes to load content
-	let unsubSelectedFile: (() => void) | null = null;
-
 	onMount(async () => {
-		// Subscribe to file selection
-		unsubSelectedFile = selectedFile.subscribe(async (newFile: string) => {
-			if (newFile && service) {
-				try {
-					const content = await service.loadFile(newFile);
-					fileContent.set(content);
-				} catch (e) {
-					console.error('Failed to load file:', e);
-				}
-			}
-		});
-
 		try {
 			await initializeEditor();
 		} catch (e) {
@@ -79,7 +64,6 @@
 	});
 
 	onDestroy(() => {
-		unsubSelectedFile?.();
 		service?.destroy();
 	});
 
@@ -143,9 +127,9 @@
 		await service.uploadProjectFiles(project.files);
 		fileSysReady.set(true);
 
-		// Set default file
+		// Set default file in active editor
 		if (defaultFile) {
-			selectedFile.set(defaultFile);
+			ctx.openFileInActiveEditor(defaultFile);
 		} else if (project.files.length > 0) {
 			// Auto-select first file if none specified
 			const firstFile = project.files.find(f =>
@@ -153,7 +137,7 @@
 				f.path.endsWith('.js') ||
 				f.path.endsWith('.ts')
 			) || project.files[0];
-			selectedFile.set(firstFile.path);
+			ctx.openFileInActiveEditor(firstFile.path);
 		}
 
 		dispatch('ready', { service });
