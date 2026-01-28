@@ -1,13 +1,23 @@
 <script lang="ts">
+	import Folder from './Folder.svelte';
 	import Icon from "@iconify/svelte";
 	import File from "./File.svelte";
 	import { slide } from "svelte/transition";
 	import type { TreeNode } from '../../types';
 
-	export let expanded = false;
-	export let parent = '';
-	export let name = '';
-	export let files: TreeNode[];
+	interface Props {
+		expanded?: boolean;
+		parent?: string;
+		name?: string;
+		files: TreeNode[];
+	}
+
+	let {
+		expanded = $bindable(false),
+		parent = '',
+		name = $bindable(''),
+		files
+	}: Props = $props();
 
 	const fullPath = `${(parent) ? `${parent}/` : ''}${(name) ? name : ''}`;
 
@@ -18,7 +28,7 @@
 	}
 </script>
 
-<button class="folder-btn" on:click={toggle}>
+<button class="folder-btn" onclick={toggle}>
 	<div class="folder-icon">
 		{#if expanded}
 			<Icon width="16" icon="mdi:folder-open" color="var(--bpe-color-primary)"/>
@@ -41,7 +51,7 @@
 		{#each files as file}
 			<li class="tree-item">
 				{#if file.type === "folder"}
-					<svelte:self {...file} parent={fullPath} />
+					<Folder {...file} parent={fullPath} />
 				{:else}
 					<File {...file} parent={fullPath} />
 				{/if}

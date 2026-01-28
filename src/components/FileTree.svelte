@@ -5,12 +5,17 @@
 
 	const { fileSysReady, fileTree } = getBrowserPodEditorContext();
 
-	/** Whether to expand folders by default */
-	export let expanded = true;
+	
 
 	/** Optional class for styling */
-	let className = '';
-	export { className as class };
+	interface Props {
+		/** Whether to expand folders by default */
+		expanded?: boolean;
+		class?: string;
+	}
+
+	let { expanded = true, class: className = '' }: Props = $props();
+	
 </script>
 
 {#if !$fileSysReady}

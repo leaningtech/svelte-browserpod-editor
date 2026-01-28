@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { onMount } from 'svelte';
 	import Container from './Container.svelte';
 	import Spinner from './Spinner.svelte';
@@ -7,21 +9,25 @@
 	import { getBrowserPodEditorContext } from '../context';
 	import { trackEvent } from '../utils';
 
-	let className = '';
-	export { className as class };
+	interface Props {
+		class?: string;
+	}
+
+	let { class: className = '' }: Props = $props();
+	
 
 	const { browserPodRunning, portalUrl } = getBrowserPodEditorContext();
 
-	let portalElement: HTMLIFrameElement;
-	let showPortalInfo = false;
-	let portalInfoTimeout: ReturnType<typeof setTimeout>;
-	let portalInfoAutoShown = false;
-	let isMobile = false;
-	let qrCodeCanvas: HTMLCanvasElement;
+	let portalElement: HTMLIFrameElement = $state();
+	let showPortalInfo = $state(false);
+	let portalInfoTimeout: ReturnType<typeof setTimeout> = $state();
+	let portalInfoAutoShown = $state(false);
+	let isMobile = $state(false);
+	let qrCodeCanvas: HTMLCanvasElement = $state();
 	let qrCodeGenerated = false;
-	let copied = false;
+	let copied = $state(false);
 	let copiedTimeout: ReturnType<typeof setTimeout>;
-	let showMobilePortal = false;
+	let showMobilePortal = $state(false);
 
 	onMount(() => {
 		checkMobileView();
@@ -33,7 +39,7 @@
 		};
 	});
 
-	$: isPortalAvailable = $browserPodRunning && $portalUrl;
+	let isPortalAvailable = $derived($browserPodRunning && $portalUrl);
 
 	function copyPortalUrl() {
 		if ($portalUrl) {
@@ -100,18 +106,22 @@
 		}
 	}
 
-	$: if ($portalUrl && !showPortalInfo && !portalInfoAutoShown && !isMobile) {
-		clearTimeout(portalInfoTimeout);
-		portalInfoTimeout = setTimeout(() => {
-			showPortalInfo = true;
-			portalInfoAutoShown = true;
-			setTimeout(() => generateQRCode(), 0);
-		}, 3000);
-	}
+	run(() => {
+		if ($portalUrl && !showPortalInfo && !portalInfoAutoShown && !isMobile) {
+			clearTimeout(portalInfoTimeout);
+			portalInfoTimeout = setTimeout(() => {
+				showPortalInfo = true;
+				portalInfoAutoShown = true;
+				setTimeout(() => generateQRCode(), 0);
+			}, 3000);
+		}
+	});
 
-	$: if ($portalUrl && portalElement) {
-		portalElement.src = $portalUrl;
-	}
+	run(() => {
+		if ($portalUrl && portalElement) {
+			portalElement.src = $portalUrl;
+		}
+	});
 
 	export function hideOverlay() {
 		showPortalInfo = false;
@@ -130,40 +140,42 @@
 	class={className}
 	actionsFullWidth={true}
 >
-	<div slot="actions" class="portal-controls preview-actions">
-		{#if isPortalAvailable}
-			{#if isMobile}
-				<button
-					class="view-btn"
-					on:click={copyPortalUrl}
-					aria-label="Copy portal URL"
-					title="Copy portal URL"
-				>
-					<Icon icon="mdi:clipboard-outline" width="14" />
-					<span>{copied ? "Copied!" : "Copy Portal"}</span>
-				</button>
+	{#snippet actions()}
+		<div  class="portal-controls preview-actions">
+			{#if isPortalAvailable}
+				{#if isMobile}
+					<button
+						class="view-btn"
+						onclick={copyPortalUrl}
+						aria-label="Copy portal URL"
+						title="Copy portal URL"
+					>
+						<Icon icon="mdi:clipboard-outline" width="14" />
+						<span>{copied ? "Copied!" : "Copy Portal"}</span>
+					</button>
+				{:else}
+					<button
+						class="view-btn"
+						onclick={togglePortalInfo}
+						aria-label={showPortalInfo ? "Hide portal QR code" : "Show portal QR code"}
+						title={showPortalInfo ? "Hide portal QR code" : "Show portal QR code"}
+					>
+						<Icon icon={showPortalInfo ? "mdi:eye-off" : "mdi:qrcode"} width="14" />
+						<span>{showPortalInfo ? "Hide Portal" : "Show Portal"}</span>
+					</button>
+				{/if}
 			{:else}
 				<button
 					class="view-btn"
-					on:click={togglePortalInfo}
-					aria-label={showPortalInfo ? "Hide portal QR code" : "Show portal QR code"}
-					title={showPortalInfo ? "Hide portal QR code" : "Show portal QR code"}
+					disabled
+					aria-label="Portal unavailable"
 				>
-					<Icon icon={showPortalInfo ? "mdi:eye-off" : "mdi:qrcode"} width="14" />
-					<span>{showPortalInfo ? "Hide Portal" : "Show Portal"}</span>
+					<Icon icon="mdi:link-off" width="14" />
+					<span>Portal Unavailable</span>
 				</button>
 			{/if}
-		{:else}
-			<button
-				class="view-btn"
-				disabled
-				aria-label="Portal unavailable"
-			>
-				<Icon icon="mdi:link-off" width="14" />
-				<span>Portal Unavailable</span>
-			</button>
-		{/if}
-	</div>
+		</div>
+	{/snippet}
 
 	<div class="portal-content">
 		{#if !$browserPodRunning}
@@ -187,14 +199,14 @@
 						<div class="portal-actions">
 							<button
 								class="portal-action-btn copy-action"
-								on:click={copyPortalUrl}
+								onclick={copyPortalUrl}
 							>
 								<Icon icon="mdi:clipboard-outline" class="mr-1" width="14" height="14" />
 								{copied ? "Copied!" : "Copy URL"}
 							</button>
 							<button
 								class="portal-action-btn close-action"
-								on:click={togglePortalInfo}
+								onclick={togglePortalInfo}
 							>
 								<Icon icon="mdi:close" class="mr-1" width="14" height="14" />
 								Hide
@@ -219,14 +231,14 @@
 						<div class="portal-actions">
 							<button
 								class="portal-action-btn copy-action"
-								on:click={copyPortalUrl}
+								onclick={copyPortalUrl}
 							>
 								<Icon icon="mdi:clipboard-outline" class="mr-1" width="14" height="14" />
 								{copied ? "Copied!" : "Copy URL"}
 							</button>
 							<button
 								class="portal-action-btn close-action"
-								on:click={toggleMobilePortal}
+								onclick={toggleMobilePortal}
 							>
 								<Icon icon="mdi:close" class="mr-1" width="14" height="14" />
 								Close
@@ -242,7 +254,7 @@
 		<div class="mobile-portal-btn-container">
 			<button
 				class="view-btn mobile-portal-btn"
-				on:click={toggleMobilePortal}
+				onclick={toggleMobilePortal}
 			>
 				<Icon icon={showMobilePortal ? "mdi:eye-off" : "mdi:qrcode"} class="mr-2" width="16" height="16" />
 				{showMobilePortal ? "Hide QR Code" : "Show Portal QR Code"}

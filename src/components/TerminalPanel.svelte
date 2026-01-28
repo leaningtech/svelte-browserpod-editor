@@ -4,29 +4,43 @@
 	import { getBrowserPodEditorContext } from '../context';
 	import type { TerminalTab } from '../types';
 
-	/** Configuration for terminal tabs */
-	export let tabs: TerminalTab[] = [
+	
+
+	
+
+	
+
+	
+
+	interface Props {
+		/** Configuration for terminal tabs */
+		tabs?: TerminalTab[];
+		/** Initially active tab ID */
+		activeTab?: string;
+		/** Title for the container */
+		title?: string;
+		/** Icon for the container */
+		icon?: string;
+		class?: string;
+	}
+
+	let {
+		tabs = [
 		{ id: 'terminal', label: 'Terminal', commands: [['/npm/bin/npm.js', 'install']], autoRun: true },
-	];
-
-	/** Initially active tab ID */
-	export let activeTab: string = tabs[0]?.id || '';
-
-	/** Title for the container */
-	export let title = 'Terminal';
-
-	/** Icon for the container */
-	export let icon = 'mdi:terminal';
-
-	let className = '';
-	export { className as class };
+	],
+		activeTab = $bindable(tabs[0]?.id || ''),
+		title = 'Terminal',
+		icon = 'mdi:terminal',
+		class: className = ''
+	}: Props = $props();
+	
 
 	const ctx = getBrowserPodEditorContext();
 
 	// Track which lazy tabs have been started
 	let startedTabs = new Set<string>();
 
-	let contentEl: HTMLDivElement;
+	let contentEl: HTMLDivElement = $state();
 	let resizeObserver: ResizeObserver;
 
 	function fitTerminal(xterm: any, container: HTMLElement) {
@@ -95,20 +109,22 @@
 	{icon}
 	class={className}
 >
-	<div class="tabbed-terminal" slot="actions">
-		{#if tabs.length > 1}
-			{#each tabs as tab}
-				<button
-					type="button"
-					class="terminal-tab"
-					class:active={activeTab === tab.id}
-					onclick={() => handleTabClick(tab)}
-				>
-					{tab.label}
-				</button>
-			{/each}
-		{/if}
-	</div>
+	{#snippet actions()}
+		<div class="tabbed-terminal" >
+			{#if tabs.length > 1}
+				{#each tabs as tab}
+					<button
+						type="button"
+						class="terminal-tab"
+						class:active={activeTab === tab.id}
+						onclick={() => handleTabClick(tab)}
+					>
+						{tab.label}
+					</button>
+				{/each}
+			{/if}
+		</div>
+	{/snippet}
 
 	<div class="terminal-content" bind:this={contentEl}>
 		{#each tabs as tab}

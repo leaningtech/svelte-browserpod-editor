@@ -6,17 +6,29 @@
 	import { loadProject, requiresVmLoading, getVmLoadConfig, extractZipBuffer } from './core/ProjectLoader';
 	import type { ProjectSource } from './types';
 
-	// Props
-	export let projectSource: ProjectSource;
-	export let apiKey: string;
-	export let defaultFile = '';
-	export let apiDomain: string | undefined = undefined;
+	
+	interface Props {
+		// Props
+		projectSource: ProjectSource;
+		apiKey: string;
+		defaultFile?: string;
+		apiDomain?: string | undefined;
+		onReady?: (service: BrowserPodService) => void;
+		onPortalReady?: (url: string) => void;
+		onError?: (type: string, message: string) => void;
+		children?: import('svelte').Snippet;
+	}
 
-	const dispatch = createEventDispatcher<{
-		ready: { service: BrowserPodService };
-		portalReady: { url: string };
-		error: { type: string; message: string };
-	}>();
+	let {
+		projectSource,
+		apiKey,
+		defaultFile = '',
+		apiDomain = undefined,
+		onReady = () => {},
+		onPortalReady = () => {},
+		onError = () => {},
+		children
+	}: Props = $props();
 
 	// Create component-local context
 	const ctx = createBrowserPodEditorContext();
@@ -59,7 +71,7 @@
 			await initializeEditor();
 		} catch (e) {
 			const error = e instanceof Error ? e : new Error(String(e));
-			dispatch('error', { type: 'init', message: error.message });
+			onError('init', error.message);
 		}
 	});
 
@@ -75,10 +87,10 @@
 			onPortal: (url) => {
 				portalUrl.set(url);
 				browserPodRunning.set(true);
-				dispatch('portalReady', { url });
+				onPortalReady(url);
 			},
 			onError: (error) => {
-				dispatch('error', { type: 'browserpod', message: error.message });
+				onError('browserpod', error.message);
 			}
 		});
 
@@ -140,7 +152,7 @@
 			ctx.openFileInActiveEditor(firstFile.path);
 		}
 
-		dispatch('ready', { service });
+		onReady(service);
 
 		// Run commands for terminals with autoRun
 		const terminalsToRun = get(terminals);
@@ -158,4 +170,4 @@
 	}
 </script>
 
-<slot />
+{@render children?.()}

@@ -1,30 +1,47 @@
 <script lang="ts">
 	import Icon from "@iconify/svelte";
-	export let title = "Editor";
-	export let icon = "mdi:code-braces";
-	export let actionsFullWidth = false;
 
-	let className = '';
-	export { className as class };
+	interface Props {
+		title?: string;
+		icon?: string;
+		actionsFullWidth?: boolean;
+		class?: string;
+		headerInline?: import('svelte').Snippet;
+		actions?: import('svelte').Snippet;
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
+
+	let {
+		title = "Editor",
+		icon = "mdi:code-braces",
+		actionsFullWidth = false,
+		class: className = '',
+		headerInline,
+		actions,
+		children,
+		...rest
+	}: Props = $props();
+	
 </script>
 
-<div class="panel {className}" {...$$restProps}>
+<div class="panel {className}" {...rest}>
 	<header class="panel-header">
 		<span class="panel-title-container">
 			<Icon icon={icon} width='14' color='var(--bpe-color-text)'/>
 			<span class="panel-title">{title}</span>
 			<!-- Inline header slot for arbitrary content -->
-			<slot name="headerInline"></slot>
+			{@render headerInline?.()}
 		</span>
 		<div
 			class="panel-actions"
 			class:full-width={actionsFullWidth}
 		>
-			<slot name="actions"></slot>
+			{@render actions?.()}
 		</div>
 	</header>
 	<div class="panel-content">
-		<slot/>
+		{@render children?.()}
 	</div>
 </div>
 

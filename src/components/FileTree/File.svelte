@@ -4,8 +4,12 @@
 
 	const { fileSysReady, editors, openFileInActiveEditor } = getBrowserPodEditorContext();
 
-	export let name: string;
-	export let parent: string;
+	interface Props {
+		name: string;
+		parent: string;
+	}
+
+	let { name, parent }: Props = $props();
 	let extension = name.slice(name.lastIndexOf(".") + 1);
 
 	const fileExt: Record<string, string> = {
@@ -20,14 +24,14 @@
 	};
 
 	// Check if any editor has this file open
-	$: filePath = `${parent}/${name}`;
-	$: isSelected = [...$editors.values()].some(e => e.filePath === filePath);
+	let filePath = $derived(`${parent}/${name}`);
+	let isSelected = $derived([...$editors.values()].some(e => e.filePath === filePath));
 </script>
 
 <button
 	class="file-btn"
 	class:selected={isSelected}
-	on:click={() => openFileInActiveEditor(filePath)}
+	onclick={() => openFileInActiveEditor(filePath)}
 	disabled={!$fileSysReady}
 >
 	<div class="file-icon">

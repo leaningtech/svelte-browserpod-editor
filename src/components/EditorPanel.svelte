@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { onMount, onDestroy } from 'svelte';
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { javascript } from '@codemirror/lang-javascript';
@@ -14,15 +16,19 @@
 
 	const { fileSysReady, browserPodRunning, saveFile, loadFile, editors, activeEditorId, registerEditor, unregisterEditor, setActiveEditor } = getBrowserPodEditorContext();
 
-	export let onDocChanged: (() => void) | undefined = undefined;
 
-	let className = '';
-	export { className as class };
+	interface Props {
+		onDocChanged?: (() => void) | undefined;
+		class?: string;
+	}
+
+	let { onDocChanged = undefined, class: className = '' }: Props = $props();
+	
 
 	// Editor registration
-	let editorId: number;
-	let content = '';
-	let currentFilePath = '';
+	let editorId: number = $state();
+	let content = $state('');
+	let currentFilePath = $state('');
 
 	onMount(() => {
 		editorId = registerEditor();
@@ -35,21 +41,23 @@
 	});
 
 	// Track file path for this editor
-	$: editorConfig = editorId !== undefined ? $editors.get(editorId) : undefined;
-	$: filePath = editorConfig?.filePath ?? '';
+	let editorConfig = $derived(editorId !== undefined ? $editors.get(editorId) : undefined);
+	let filePath = $derived(editorConfig?.filePath ?? '');
 
 	// Load content when file path changes
-	$: if (filePath && filePath !== currentFilePath && $fileSysReady) {
-		currentFilePath = filePath;
-		loadFile(filePath).then(fileContent => {
-			content = fileContent;
-		}).catch(e => {
-			console.error('Failed to load file:', e);
-		});
-	}
+	run(() => {
+		if (filePath && filePath !== currentFilePath && $fileSysReady) {
+			currentFilePath = filePath;
+			loadFile(filePath).then(fileContent => {
+				content = fileContent;
+			}).catch(e => {
+				console.error('Failed to load file:', e);
+			});
+		}
+	});
 
 	// Check if this editor is active (only show indicator when multiple editors exist)
-	$: isActive = $editors.size > 1 && $activeEditorId === editorId;
+	let isActive = $derived($editors.size > 1 && $activeEditorId === editorId);
 
 	function getLanguageExtension(filename: string) {
 		const ext = filename.split('.').pop()?.toLowerCase();
@@ -68,7 +76,7 @@
 		}
 	}, 1000);
 
-	$: editorExtensions = [
+	let editorExtensions = $derived([
 		...getLanguageExtension(filePath),
 		oneDark,
 		EditorView.updateListener.of((update) => {
@@ -77,7 +85,7 @@
 				if ($browserPodRunning) debounceSaveFile();
 			}
 		})
-	];
+	]);
 
 	function handleFocus() {
 		if (editorId !== undefined) {
@@ -86,21 +94,23 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	class="editor-wrapper"
 	class:editor-active={isActive}
-	on:click={handleFocus}
-	on:focusin={handleFocus}
+	onclick={handleFocus}
+	onfocusin={handleFocus}
 >
 	<Container
 		title="Editor"
 		class={className}
 	>
-		<span slot="headerInline" class="file-path">
-			{(filePath || '').toUpperCase()}
-		</span>
+		{#snippet headerInline()}
+				<span  class="file-path">
+				{(filePath || '').toUpperCase()}
+			</span>
+			{/snippet}
 		{#if !$fileSysReady}
 			<Spinner />
 		{:else}

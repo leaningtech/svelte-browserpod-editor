@@ -1,4 +1,12 @@
-<div class="spinner-container" {...$$restProps}>
+<script lang="ts">
+	interface Props {
+		[key: string]: any
+	}
+
+	let { ...rest }: Props = $props();
+</script>
+
+<div class="spinner-container" {...rest}>
 	<div class="loader"></div>
 </div>
 
