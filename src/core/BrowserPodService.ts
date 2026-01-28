@@ -129,6 +129,7 @@ export class BrowserPodService {
 
     for (const file of files) {
       const parts = file.path.split('/');
+      await this.pod.createDirectory('/files');
       if (parts.length > 1) {
         parts.pop();
         const dir = parts.join('/');
