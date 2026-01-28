@@ -1,6 +1,7 @@
 /**
  * BrowserPodService - Class-based wrapper for BrowserPod
  */
+import { BrowserPod } from '@leaningtech/browserpod';
 import type { BrowserPodServiceOptions, ProjectFile } from '../types';
 import { trackEvent } from '../utils';
 
@@ -25,9 +26,6 @@ export class BrowserPodService {
    */
   async boot(): Promise<void> {
     try {
-      // Dynamic import to avoid top-level await propagation
-      const { BrowserPod } = await import('@leaningtech/browserpod');
-
       const bootOptions: { apiKey: string; apiDomain?: string } = {
         apiKey: this.apiKey,
       };
