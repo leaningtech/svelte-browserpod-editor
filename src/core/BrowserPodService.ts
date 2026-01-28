@@ -127,9 +127,9 @@ export class BrowserPodService {
       throw new Error('BrowserPod not initialized');
     }
 
+    await this.pod.createDirectory('/files');
     for (const file of files) {
       const parts = file.path.split('/');
-      await this.pod.createDirectory('/files');
       if (parts.length > 1) {
         parts.pop();
         const dir = parts.join('/');
