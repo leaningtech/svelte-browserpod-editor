@@ -12,17 +12,23 @@
 		port?: number;
 	}
 
-	let { class: className = '', port = undefined }: Props = $props();
+	let { class: className = '', port = $bindable() }: Props = $props();
 	
 
-	const { browserPodRunning, portalUrl } = getBrowserPodEditorContext();
+	const { browserPodRunning, portalUrls } = getBrowserPodEditorContext();
 
-	let portalElement: HTMLIFrameElement = $state();
+	let portalUrl = $derived(port? portalUrls.get(port) : undefined);
+	$effect(() => {
+		if (port === undefined && portalUrls.size > 0) {
+			port = portalUrls.keys().next()?.value;
+		}
+	});
+	let portalElement: HTMLIFrameElement|undefined = $state();
 	let showPortalInfo = $state(false);
 	let portalInfoTimeout: ReturnType<typeof setTimeout>;
 	let portalInfoAutoShown = $state(false);
 	let isMobile = $state(false);
-	let qrCodeCanvas: HTMLCanvasElement = $state();
+	let qrCodeCanvas: HTMLCanvasElement|undefined = $state();
 	let qrCodeGenerated = false;
 	let copied = $state(false);
 	let copiedTimeout: ReturnType<typeof setTimeout>;
@@ -38,11 +44,11 @@
 		};
 	});
 
-	let isPortalAvailable = $derived($browserPodRunning && $portalUrl);
+	let isPortalAvailable = $derived($browserPodRunning && portalUrl);
 
 	function copyPortalUrl() {
-		if ($portalUrl) {
-			navigator.clipboard.writeText($portalUrl);
+		if (portalUrl) {
+			navigator.clipboard.writeText(portalUrl);
 			copied = true;
 			clearTimeout(copiedTimeout);
 			copiedTimeout = setTimeout(() => copied = false, 1200);
@@ -50,9 +56,9 @@
 	}
 
 	function viewPortalUrl() {
-		if ($portalUrl) {
+		if (portalUrl) {
 			trackEvent('OpenPortal');
-			window.open($portalUrl, '_blank');
+			window.open(portalUrl, '_blank');
 		}
 	}
 
@@ -62,7 +68,7 @@
 		portalInfoAutoShown = true;
 		qrCodeGenerated = false;
 
-		if (showPortalInfo && $portalUrl) {
+		if (showPortalInfo && portalUrl) {
 			setTimeout(() => generateQRCode(), 0);
 		}
 	}
@@ -70,14 +76,14 @@
 	function toggleMobilePortal() {
 		showMobilePortal = !showMobilePortal;
 		qrCodeGenerated = false;
-		if (showMobilePortal && $portalUrl) {
+		if (showMobilePortal && portalUrl) {
 			setTimeout(() => generateQRCode(), 0);
 		}
 	}
 
 	function generateQRCode() {
-		if ($portalUrl && qrCodeCanvas) {
-			QRCode.toCanvas(qrCodeCanvas, $portalUrl, {
+		if (portalUrl && qrCodeCanvas) {
+			QRCode.toCanvas(qrCodeCanvas, portalUrl, {
 				width: 150,
 				margin: 0,
 				color: {
@@ -106,7 +112,7 @@
 	}
 
 	$effect(() => {
-		if ($portalUrl && !showPortalInfo && !portalInfoAutoShown && !isMobile) {
+		if (portalUrl && !showPortalInfo && !portalInfoAutoShown && !isMobile) {
 			clearTimeout(portalInfoTimeout);
 			portalInfoTimeout = setTimeout(() => {
 				showPortalInfo = true;
@@ -117,8 +123,8 @@
 	});
 
 	$effect(() => {
-		if ($portalUrl && portalElement) {
-			portalElement.src = $portalUrl;
+		if (portalUrl && portalElement) {
+			portalElement.src = portalUrl;
 		}
 	});
 
@@ -183,7 +189,7 @@
 			<div class="portal-wrapper">
 			<iframe bind:this={portalElement} class="portal" id="portal" title="Portal"></iframe>
 
-			{#if showPortalInfo && !isMobile && $portalUrl}
+			{#if showPortalInfo && !isMobile && portalUrl}
 				<div class="portal-overlay">
 					<h2 class="portal-overlay-title">
 						Scan this Portal
@@ -193,7 +199,7 @@
 					</div>
 					<div class="portal-url-container">
 						<p class="portal-url-text">
-							{$portalUrl}
+							{portalUrl}
 						</p>
 						<div class="portal-actions">
 							<button
@@ -215,7 +221,7 @@
 				</div>
 			{/if}
 
-			{#if showMobilePortal && isMobile && $portalUrl}
+			{#if showMobilePortal && isMobile && portalUrl}
 				<div class="portal-overlay mobile-portal-overlay">
 					<h2 class="portal-overlay-title" style="font-size: 1.25rem; margin-bottom: 1rem;">
 						Scan this Portal
@@ -225,7 +231,7 @@
 					</div>
 					<div class="portal-url-container" style="max-width: 18rem; padding: 0.5rem;">
 						<p class="portal-url-text">
-							{$portalUrl}
+							{portalUrl}
 						</p>
 						<div class="portal-actions">
 							<button
@@ -249,7 +255,7 @@
 		</div>
 		{/if}
 	</div>
-	{#if isMobile && $portalUrl}
+	{#if isMobile && portalUrl}
 		<div class="mobile-portal-btn-container">
 			<button
 				class="view-btn mobile-portal-btn"

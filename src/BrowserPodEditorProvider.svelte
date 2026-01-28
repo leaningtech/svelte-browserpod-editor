@@ -14,7 +14,7 @@
 		defaultFile?: string;
 		apiDomain?: string | undefined;
 		onReady?: (service: BrowserPodService) => void;
-		onPortalReady?: (url: string) => void;
+		onPortal?: ({url, port}: {url: string, port: number}) => void;
 		onError?: (type: string, message: string) => void;
 		children?: import('svelte').Snippet;
 	}
@@ -25,14 +25,14 @@
 		defaultFile = '',
 		apiDomain = undefined,
 		onReady = () => {},
-		onPortalReady = () => {},
+		onPortal = () => {},
 		onError = () => {},
 		children
 	}: Props = $props();
 
 	// Create component-local context
 	const ctx = createBrowserPodEditorContext();
-	const { browserPodRunning, fileSysReady, portalUrl, fileTree, terminals } = ctx;
+	const { browserPodRunning, fileSysReady, portalUrls, fileTree, terminals } = ctx;
 
 	let service: BrowserPodService | null = null;
 
@@ -84,10 +84,10 @@
 		service = new BrowserPodService({
 			apiKey,
 			apiDomain,
-			onPortal: (url) => {
-				portalUrl.set(url);
+			onPortal: ({url, port}) => {
+				portalUrls.set(port, url);
 				browserPodRunning.set(true);
-				onPortalReady(url);
+				onPortal({url, port});
 			},
 			onError: (error) => {
 				onError('browserpod', error.message);

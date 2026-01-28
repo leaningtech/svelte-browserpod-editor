@@ -11,7 +11,7 @@ export class BrowserPodService {
   private defaultTerminalId: string | null = null;
   private apiKey: string;
   private apiDomain?: string;
-  private onPortal?: (url: string) => void;
+  private onPortal?: ({url, port}: {url: string, port: number}) => void;
   private onError?: (error: Error) => void;
 
   constructor(options: BrowserPodServiceOptions) {
@@ -37,10 +37,10 @@ export class BrowserPodService {
 
       trackEvent('BrowserPodBoot');
 
-      this.pod.onPortal((data: any) => {
+      this.pod.onPortal((data: {url: string, port: number}) => {
         if (data && data.url) {
           trackEvent('LoadedPortal');
-          this.onPortal?.(data.url);
+          this.onPortal?.(data);
         }
       });
     } catch (error) {

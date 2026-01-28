@@ -3,6 +3,7 @@
  */
 import { getContext, setContext } from 'svelte';
 import { get, writable, type Writable } from 'svelte/store';
+import { SvelteMap } from 'svelte/reactivity';
 import type { TreeNode, TerminalConfig, EditorConfig } from './types';
 
 const CONTEXT_KEY = Symbol('BrowserPodEditor');
@@ -12,8 +13,8 @@ export interface BrowserPodEditorContext {
   browserPodRunning: Writable<boolean>;
   /** Whether the file system is ready */
   fileSysReady: Writable<boolean>;
-  /** Portal URL for the preview */
-  portalUrl: Writable<string>;
+  /** Portal URLs for the previews */
+  portalUrls: SvelteMap<number, string>;
   /** Whether the sidebar is open */
   isSidebarOpen: Writable<boolean>;
   /** File tree structure */
@@ -51,6 +52,8 @@ export interface BrowserPodEditorContext {
 }
 
 export function createBrowserPodEditorContext(): BrowserPodEditorContext {
+  const portalUrls = new SvelteMap<number, string>();
+
   const terminalsMap = new Map<string, TerminalConfig>();
   const terminals = writable(terminalsMap);
 
@@ -64,7 +67,7 @@ export function createBrowserPodEditorContext(): BrowserPodEditorContext {
   const context: BrowserPodEditorContext = {
     browserPodRunning: writable(false),
     fileSysReady: writable(false),
-    portalUrl: writable(''),
+    portalUrls,
     isSidebarOpen: writable(true),
     fileTree: writable([]),
     terminals,

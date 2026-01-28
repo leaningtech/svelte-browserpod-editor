@@ -75,7 +75,7 @@ export interface BrowserPodEditorProps {
 export interface BrowserPodServiceOptions {
   apiKey: string;
   apiDomain?: string;
-  onPortal?: (url: string) => void;
+  onPortal?: ({url, port}: {url: string, port: number}) => void;
   onError?: (error: Error) => void;
 }
 
