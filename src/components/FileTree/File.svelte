@@ -10,7 +10,7 @@
 	}
 
 	let { name, parent }: Props = $props();
-	let extension = name.slice(name.lastIndexOf(".") + 1);
+	let extension = $derived(name.slice(name.lastIndexOf(".") + 1));
 
 	const fileExt: Record<string, string> = {
 		svelte: 'devicon:svelte',

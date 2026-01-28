@@ -19,7 +19,7 @@
 		files
 	}: Props = $props();
 
-	const fullPath = `${(parent) ? `${parent}/` : ''}${(name) ? name : ''}`;
+	const fullPath = $derived(`${(parent) ? `${parent}/` : ''}${(name) ? name : ''}`);
 
 	if (!name) name = 'project';
 

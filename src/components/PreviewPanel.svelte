@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { onMount } from 'svelte';
 	import Container from './Container.svelte';
 	import Spinner from './Spinner.svelte';
@@ -11,16 +9,17 @@
 
 	interface Props {
 		class?: string;
+		port?: number;
 	}
 
-	let { class: className = '' }: Props = $props();
+	let { class: className = '', port = undefined }: Props = $props();
 	
 
 	const { browserPodRunning, portalUrl } = getBrowserPodEditorContext();
 
 	let portalElement: HTMLIFrameElement = $state();
 	let showPortalInfo = $state(false);
-	let portalInfoTimeout: ReturnType<typeof setTimeout> = $state();
+	let portalInfoTimeout: ReturnType<typeof setTimeout>;
 	let portalInfoAutoShown = $state(false);
 	let isMobile = $state(false);
 	let qrCodeCanvas: HTMLCanvasElement = $state();
@@ -106,7 +105,7 @@
 		}
 	}
 
-	run(() => {
+	$effect(() => {
 		if ($portalUrl && !showPortalInfo && !portalInfoAutoShown && !isMobile) {
 			clearTimeout(portalInfoTimeout);
 			portalInfoTimeout = setTimeout(() => {
@@ -117,7 +116,7 @@
 		}
 	});
 
-	run(() => {
+	$effect(() => {
 		if ($portalUrl && portalElement) {
 			portalElement.src = $portalUrl;
 		}
