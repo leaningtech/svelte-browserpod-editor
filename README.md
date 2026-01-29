@@ -123,21 +123,8 @@ Import the default theme and override CSS variables:
 :root {
   --bpe-color-primary: #your-brand-color;
   --bpe-color-border: rgba(255, 255, 255, 0.2);
-  --bpe-radius-panel: 8px;
 }
 ```
-
-### Key CSS Variables
-
-| Variable | Purpose |
-|----------|---------|
-| `--bpe-color-primary` | Accent color |
-| `--bpe-color-text` | Main text color |
-| `--bpe-color-border` | Border color |
-| `--bpe-color-terminal-bg` | Terminal background |
-| `--bpe-radius-panel` | Panel border radius |
-| `--bpe-editor-font-family` | Editor font stack |
-| `--bpe-editor-font-size` | Editor font size |
 
 See `theme.css` for the complete list of customizable variables.
 

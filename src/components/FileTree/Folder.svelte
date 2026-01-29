@@ -71,7 +71,7 @@
 		background: none;
 		cursor: pointer;
 		text-align: left;
-		border-radius: var(--bpe-radius-button);
+		border-radius: 0.375rem;
 		transition: all 0.2s ease;
 		color: var(--bpe-color-text);
 		font-size: 0.875rem;

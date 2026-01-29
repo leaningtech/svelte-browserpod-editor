@@ -4,14 +4,6 @@
 	import { getBrowserPodEditorContext } from '../context';
 	import type { TerminalTab } from '../types';
 
-	
-
-	
-
-	
-
-	
-
 	interface Props {
 		/** Configuration for terminal tabs */
 		tabs?: TerminalTab[];
@@ -147,13 +139,16 @@
 	.terminal-tab {
 		font-size: 0.75rem;
 		font-weight: 500;
-		padding: 0.25rem 0.5rem;
+		padding: 0.5rem 0.75rem;
+		margin-block: calc(var(--bpe-container-header-padding) * -1);
 		border: none;
 		background: none;
 		cursor: pointer;
-		transition: color 0.2s, background-color 0.2s;
+		transition: color 0.2s;
 		color: var(--bpe-color-text-muted);
-		border-radius: 0.25rem;
+	}
+	.terminal-tab:last-child {
+		margin-inline-end: calc(var(--bpe-container-header-padding) * -1);
 	}
 
 	.terminal-tab:hover:not(.active) {

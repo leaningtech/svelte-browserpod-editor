@@ -155,18 +155,18 @@
 						aria-label="Copy portal URL"
 						title="Copy portal URL"
 					>
-						<Icon icon="mdi:clipboard-outline" width="14" />
+						<Icon icon="mdi:clipboard-outline" width="12" height="12" />
 						<span>{copied ? "Copied!" : "Copy Portal"}</span>
 					</button>
 				{:else}
 					<button
 						class="view-btn"
 						onclick={togglePortalInfo}
-						aria-label={showPortalInfo ? "Hide portal QR code" : "Show portal QR code"}
-						title={showPortalInfo ? "Hide portal QR code" : "Show portal QR code"}
+						aria-label={showPortalInfo ? "Hide portal info" : "Show portal info"}
+						title={showPortalInfo ? "Hide portal info" : "Show portal info"}
 					>
-						<Icon icon={showPortalInfo ? "mdi:eye-off" : "mdi:qrcode"} width="14" />
-						<span>{showPortalInfo ? "Hide Portal" : "Show Portal"}</span>
+						<Icon icon={showPortalInfo ? "mdi:eye-off" : "mdi:qrcode"} width="12" height="12" />
+						<span>{showPortalInfo ? "Hide" : "Portal"}</span>
 					</button>
 				{/if}
 			{:else}
@@ -175,7 +175,7 @@
 					disabled
 					aria-label="Portal unavailable"
 				>
-					<Icon icon="mdi:link-off" width="14" />
+					<Icon icon="mdi:link-off" width="12" height="12" />
 					<span>Portal Unavailable</span>
 				</button>
 			{/if}
@@ -410,10 +410,10 @@
 		display: flex;
 		align-items: center;
 		gap: 0.25rem;
-		padding: 0.25rem 0.5rem;
+		padding: 0;
 		border: none;
-		background: var(--bpe-color-bg-hover);
-		color: var(--bpe-color-text);
+		background: none;
+		color: var(--bpe-color-text-muted);
 		border-radius: 0.25rem;
 		cursor: pointer;
 		font-size: 0.75rem;
@@ -421,8 +421,7 @@
 	}
 
 	.view-btn:hover:not(:disabled) {
-		background: var(--bpe-color-primary);
-		color: var(--bpe-color-text-on-primary);
+		color: var(--bpe-color-text);
 	}
 
 	.view-btn:disabled {

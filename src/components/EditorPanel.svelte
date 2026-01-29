@@ -108,7 +108,7 @@
 	>
 		{#snippet headerInline()}
 				<span  class="file-path">
-				{(filePath || '').toUpperCase()}
+				{(filePath || '')}
 			</span>
 			{/snippet}
 		{#if !$fileSysReady}
@@ -130,21 +130,20 @@
 		flex: 1;
 		min-height: 0;
 		min-width: 0;
-		border-radius: var(--bpe-radius-panel);
 	}
 
 	.editor-wrapper.editor-active {
-		outline: var(--bpe-border-editor-active, 2px solid var(--bpe-color-primary));
+		outline: var(--bpe-editor-active-border, 2px solid var(--bpe-color-primary));
 		outline-offset: -2px;
 	}
 
 	.file-path {
-		color: var(--bpe-color-primary);
+		color: var(--bpe-color-text);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		max-width: 250px;
-		font-weight: 600;
+		font-weight: 500;
 		font-size: 0.75rem;
 	}
 

@@ -47,8 +47,8 @@
 
 <style>
 	.panel {
-		border-radius: var(--bpe-radius-panel);
-		box-shadow: var(--bpe-shadow-panel);
+		border-radius: var(--bpe-container-border-radius);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 		overflow: hidden;
 		border: 1px solid var(--bpe-color-border);
 		display: flex;
@@ -65,15 +65,11 @@
 		align-items: center;
 		justify-content: space-between;
 		border-bottom: 1px solid var(--bpe-color-border);
-		padding: 0.375rem 0.75rem;
-		background: linear-gradient(
-			to bottom,
-			var(--bpe-color-panel-header-start),
-			var(--bpe-color-panel-header-end)
-		);
-		border-top-left-radius: var(--bpe-radius-panel);
-		border-top-right-radius: var(--bpe-radius-panel);
-		box-shadow: var(--bpe-shadow-header);
+		padding: var(--bpe-container-header-padding);
+		background: var(--bpe-container-header-background);
+		border-top-left-radius: var(--bpe-container-border-radius);
+		border-top-right-radius: var(--bpe-container-border-radius);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 	}
 
 	.panel-title-container {
@@ -86,10 +82,9 @@
 	.panel-title {
 		margin: 0;
 		font-size: 0.75rem;
-		color: var(--bpe-color-text);
-		font-weight: 600;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
+		color: var(--bpe-container-header-title-color);
+		font-weight: 500;
+		letter-spacing: 0.06em;
 	}
 
 	.panel-actions {
@@ -106,8 +101,8 @@
 	}
 
 	.panel-content {
-		flex: var(--bpe-panel-content-flex, 1 1 auto);
-		min-height: var(--bpe-panel-content-min-height, 0);
+		flex: 1 1 auto;
+		min-height: var(--bpe-container-content-min-height);
 		height: 0; /* Explicit height allows children to use height: 100% */
 		overflow: hidden;
 		display: flex;

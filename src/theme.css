@@ -24,28 +24,19 @@
   --bpe-color-text-on-primary: white;
   --bpe-color-border: rgba(255, 255, 255, 0.15);
   --bpe-color-bg-hover: rgba(255, 255, 255, 0.05);
+  --bpe-color-button-secondary: #64748b;
+  --bpe-color-spinner: var(--bpe-color-primary);
 
-  /* ===== Panel ===== */
-  --bpe-color-panel-header-start: rgba(0, 0, 0, 0.5);
-  --bpe-color-panel-header-end: rgba(0, 0, 0, 0.2);
+  /* ===== Container ===== */
+  --bpe-container-header-background: rgba(24, 24, 27, 0.8);
+  --bpe-container-header-padding: 0.5rem;
+  --bpe-container-header-title-color: var(--bpe-color-text-muted);
+  --bpe-container-border-radius: 0.5rem;
+  --bpe-container-content-min-height: 0;
 
   /* ===== Terminal ===== */
   --bpe-color-terminal-bg: rgb(9, 9, 11);
   --bpe-color-tab-active: rgba(255, 255, 255, 0.08);
-
-  /* ===== Spinner ===== */
-  --bpe-color-spinner: var(--bpe-color-primary);
-
-  /* ===== Buttons ===== */
-  --bpe-color-button-secondary: #64748b;
-
-  /* ===== Shadows ===== */
-  --bpe-shadow-panel: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --bpe-shadow-header: 0 2px 8px rgba(0, 0, 0, 0.08);
-
-  /* ===== Sizing ===== */
-  --bpe-radius-panel: 12px;
-  --bpe-radius-button: 0.375rem;
 
   /* ===== CodeMirror Editor ===== */
   --bpe-editor-font-family: "Fira Code", "JetBrains Mono", monospace;
@@ -56,7 +47,5 @@
   --bpe-editor-gutter-border: rgba(255, 255, 255, 0.15);
   --bpe-editor-gutter-text: rgba(255, 255, 255, 0.5);
   --bpe-editor-active-line-bg: rgba(255, 255, 255, 0.05);
-
-  /* ===== Multi-Editor ===== */
-  --bpe-border-editor-active: 2px solid var(--bpe-color-primary);
+  --bpe-editor-active-border: 2px solid var(--bpe-color-primary);
 }
