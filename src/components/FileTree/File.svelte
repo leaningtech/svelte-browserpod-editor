@@ -24,7 +24,7 @@
 	};
 
 	// Check if any editor has this file open
-	let filePath = $derived(`${parent}/${name}`);
+	let filePath = $derived(parent ? `${parent}/${name}` : name);
 	let isSelected = $derived([...$editors.values()].some(e => e.filePath === filePath));
 </script>
 

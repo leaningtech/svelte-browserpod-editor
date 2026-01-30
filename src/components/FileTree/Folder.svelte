@@ -15,13 +15,13 @@
 	let {
 		expanded = $bindable(false),
 		parent = '',
-		name = $bindable(''),
+		name = '',
 		files
 	}: Props = $props();
 
-	const fullPath = $derived(`${(parent) ? `${parent}/` : ''}${(name) ? name : ''}`);
-
-	if (!name) name = 'project';
+	const fullPath = $derived(`${(parent) ? `${parent}/` : ''}${name}`);
+	// Display name for UI - 'project' for root, actual name otherwise
+	const displayName = $derived(name || 'project');
 
 	function toggle() {
 		expanded = !expanded;
@@ -36,7 +36,7 @@
 			<Icon width="16" icon="mdi:folder" color="var(--bpe-color-primary)"/>
 		{/if}
 	</div>
-	<span class="folder-name">{name}</span>
+	<span class="folder-name">{displayName}</span>
 	<div class="expand-icon">
 		{#if expanded}
 			<Icon width="14" icon="mdi:chevron-down" />
