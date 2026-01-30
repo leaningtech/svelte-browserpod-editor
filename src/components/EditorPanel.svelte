@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { onMount, onDestroy } from 'svelte';
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { javascript } from '@codemirror/lang-javascript';
@@ -28,7 +26,7 @@
 	// Editor registration
 	let editorId: number = $state();
 	let content = $state('');
-	let currentFilePath = $state('');
+	let loadedFilePath = '';  // Plain variable - not reactive, just tracks last loaded path
 
 	onMount(() => {
 		editorId = registerEditor();
@@ -45,9 +43,9 @@
 	let filePath = $derived(editorConfig?.filePath ?? '');
 
 	// Load content when file path changes
-	run(() => {
-		if (filePath && filePath !== currentFilePath && $fileSysReady) {
-			currentFilePath = filePath;
+	$effect(() => {
+		if (filePath && $fileSysReady && filePath !== loadedFilePath) {
+			loadedFilePath = filePath;
 			loadFile(filePath).then(fileContent => {
 				content = fileContent;
 			}).catch(e => {
@@ -71,8 +69,8 @@
 	}
 
 	const debounceSaveFile = debounce(() => {
-		if (currentFilePath) {
-			saveFile(currentFilePath, content);
+		if (loadedFilePath) {
+			saveFile(loadedFilePath, content);
 		}
 	}, 1000);
 
