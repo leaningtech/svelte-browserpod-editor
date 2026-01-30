@@ -149,7 +149,7 @@ CSS variables defined in `theme.css` are the **public customization API**. All v
 :root {
   --bpe-color-primary: #your-brand-color;
   --bpe-color-border: rgba(255, 255, 255, 0.2);
-  --bpe-radius-panel: 8px;
+  --bpe-container-border-radius: 8px;
 }
 ```
 
@@ -166,6 +166,8 @@ Consumers import this first, then override variables in their own CSS.
 
 All variables use the `--bpe-` prefix (BrowserPod Editor) to avoid naming collisions.
 
+#### Core Colors
+
 | Variable | Purpose | Default |
 |----------|---------|---------|
 | `--bpe-color-primary` | Accent color | `#00b3a0` |
@@ -177,16 +179,30 @@ All variables use the `--bpe-` prefix (BrowserPod Editor) to avoid naming collis
 | `--bpe-color-text-on-primary` | Text on primary bg | `white` |
 | `--bpe-color-border` | Borders | `rgba(255, 255, 255, 0.15)` |
 | `--bpe-color-bg-hover` | Hover backgrounds | `rgba(255, 255, 255, 0.05)` |
-| `--bpe-color-panel-header-start` | Header gradient start | `rgba(0, 0, 0, 0.5)` |
-| `--bpe-color-panel-header-end` | Header gradient end | `rgba(0, 0, 0, 0.2)` |
-| `--bpe-color-terminal-bg` | Terminal background | `rgb(9, 9, 11)` |
-| `--bpe-color-tab-active` | Active tab bg | `rgba(255, 255, 255, 0.08)` |
-| `--bpe-color-spinner` | Spinner color | `var(--bpe-color-primary)` |
 | `--bpe-color-button-secondary` | Secondary button | `#64748b` |
-| `--bpe-shadow-panel` | Panel shadow | `0 4px 16px rgba(0, 0, 0, 0.1)` |
-| `--bpe-shadow-header` | Header shadow | `0 2px 8px rgba(0, 0, 0, 0.08)` |
-| `--bpe-radius-panel` | Panel border radius | `12px` |
-| `--bpe-radius-button` | Button border radius | `0.375rem` |
+| `--bpe-color-spinner` | Spinner color | `var(--bpe-color-primary)` |
+
+#### Container
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `--bpe-container-header-background` | Header background | `rgba(24, 24, 27, 0.8)` |
+| `--bpe-container-header-padding` | Header padding | `0.5rem` |
+| `--bpe-container-header-title-color` | Header title color | `var(--bpe-color-text-muted)` |
+| `--bpe-container-border-radius` | Container border radius | `0.5rem` |
+| `--bpe-container-content-min-height` | Content minimum height | `0` |
+
+#### Terminal
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `--bpe-color-terminal-bg` | Terminal background | `rgb(9, 9, 11)` |
+| `--bpe-color-tab-active` | Active tab background | `rgba(255, 255, 255, 0.08)` |
+
+#### CodeMirror Editor
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
 | `--bpe-editor-font-family` | Editor font stack | `"Fira Code", "JetBrains Mono", monospace` |
 | `--bpe-editor-font-size` | Editor font size | `0.85rem` |
 | `--bpe-editor-text-color` | Editor text color | `rgba(255, 255, 255, 0.9)` |
@@ -195,7 +211,7 @@ All variables use the `--bpe-` prefix (BrowserPod Editor) to avoid naming collis
 | `--bpe-editor-gutter-border` | Gutter border color | `rgba(255, 255, 255, 0.15)` |
 | `--bpe-editor-gutter-text` | Line numbers text color | `rgba(255, 255, 255, 0.5)` |
 | `--bpe-editor-active-line-bg` | Active line highlight | `rgba(255, 255, 255, 0.05)` |
-| `--bpe-border-editor-active` | Active editor border (multi-editor) | `2px solid var(--bpe-color-primary)` |
+| `--bpe-editor-active-border` | Active editor border (multi-editor) | `2px solid var(--bpe-color-primary)` |
 
 ## Upcoming Work
 
