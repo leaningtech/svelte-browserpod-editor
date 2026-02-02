@@ -1,6 +1,6 @@
 # svelte-browserpod-editor
 
-A Svelte component library for building in-browser code editors powered by [BrowserPod](https://browserpod.com). Run a full development environment in the browser via WebAssembly—npm install, dev servers, live previews, and more.
+A Svelte component library for building in-browser code editors powered by [BrowserPod](https://browserpod.io). Run a full development environment in the browser via WebAssembly—npm install, dev servers, live previews, and more.
 
 ## Installation
 
