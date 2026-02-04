@@ -73,6 +73,13 @@ export class BrowserPodService {
   }
 
   /**
+   * Get the underlying BrowserPod instance for advanced operations
+   */
+  getPod(): any {
+    return this.pod;
+  }
+
+  /**
    * Get a terminal by ID
    */
   getTerminal(id: string): any {
