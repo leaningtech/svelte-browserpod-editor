@@ -86,7 +86,6 @@
 			apiDomain,
 			onPortal: ({url, port}) => {
 				portalUrls.set(port, url);
-				browserPodRunning.set(true);
 				onPortal({url, port});
 			},
 			onError: (error) => {
@@ -96,6 +95,7 @@
 
 		// Boot BrowserPod (no terminal yet)
 		await service.boot();
+		browserPodRunning.set(true);
 
 		// Wait for child components to mount and register terminals
 		await tick();

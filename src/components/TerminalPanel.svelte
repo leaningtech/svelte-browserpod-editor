@@ -28,9 +28,12 @@
 	
 
 	const ctx = getBrowserPodEditorContext();
+	const { browserPodRunning } = ctx;
 
 	// Track which lazy tabs have been started
 	let startedTabs = new Set<string>();
+	// Track tabs activated before pod was ready
+	let pendingTabIds: string[] = $state([]);
 
 	let contentEl: HTMLDivElement = $state();
 	let resizeObserver: ResizeObserver;
@@ -84,16 +87,38 @@
 		}
 	});
 
+	function startTab(tab: TerminalTab) {
+		if (startedTabs.has(tab.id)) return;
+		startedTabs.add(tab.id);
+		startedTabs = startedTabs; // trigger reactivity
+		ctx.runCommands(tab.id, tab.commands!, tab.stopOnError ?? true);
+	}
+
 	function handleTabClick(tab: TerminalTab) {
 		activeTab = tab.id;
 
 		// Handle lazy-start terminals
-		if (tab.runOnActivate && tab.commands && tab.commands.length > 0 && !startedTabs.has(tab.id)) {
-			startedTabs.add(tab.id);
-			startedTabs = startedTabs; // trigger reactivity
-			ctx.runCommands(tab.id, tab.commands, tab.stopOnError ?? true);
+		if (tab.runOnActivate && tab.commands && tab.commands.length > 0) {
+			if ($browserPodRunning) {
+				startTab(tab);
+			} else if (!pendingTabIds.includes(tab.id)) {
+				// Mark as pending — the $effect below will start it once the pod is ready
+				pendingTabIds = [...pendingTabIds, tab.id];
+			}
 		}
 	}
+
+	// When pod becomes ready, start any tabs that were activated while waiting
+	$effect(() => {
+		if ($browserPodRunning && pendingTabIds.length > 0) {
+			for (const tab of tabs) {
+				if (pendingTabIds.includes(tab.id) && tab.commands && tab.commands.length > 0) {
+					startTab(tab);
+				}
+			}
+			pendingTabIds = [];
+		}
+	});
 </script>
 
 <Container

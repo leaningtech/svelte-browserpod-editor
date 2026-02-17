@@ -183,7 +183,7 @@
 	{/snippet}
 
 	<div class="portal-content">
-		{#if !$browserPodRunning}
+		{#if !isPortalAvailable}
 			<Spinner />
 		{:else}
 			<div class="portal-wrapper">
