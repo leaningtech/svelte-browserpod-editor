@@ -9,18 +9,19 @@
 	import { EditorView } from '@codemirror/view';
 	import Container from './Container.svelte';
 	import Spinner from './Spinner.svelte';
-	import { getBrowserPodEditorContext } from '../context.ts';
+	import { resolveContext } from '../context.ts';
 	import { debounce } from '../utils.ts';
-
-	const { fileSysReady, browserPodRunning, saveFile, loadFile, editors, activeEditorId, registerEditor, unregisterEditor, setActiveEditor } = getBrowserPodEditorContext();
 
 
 	interface Props {
 		onDocChanged?: (() => void) | undefined;
+		ctxId?: string;
 		class?: string;
 	}
 
-	let { onDocChanged = undefined, class: className = '' }: Props = $props();
+	let { onDocChanged = undefined, ctxId = undefined, class: className = '' }: Props = $props();
+
+	const { fileSysReady, browserPodRunning, saveFile, loadFile, editors, activeEditorId, registerEditor, unregisterEditor, setActiveEditor } = (() => resolveContext(ctxId))();
 	
 
 	// Editor registration

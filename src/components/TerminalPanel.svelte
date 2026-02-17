@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import Container from './Container.svelte';
-	import { getBrowserPodEditorContext } from '../context.ts';
+	import { resolveContext } from '../context.ts';
 	import type { TerminalTab } from '../types.ts';
 
 	interface Props {
@@ -13,6 +13,7 @@
 		title?: string;
 		/** Icon for the container */
 		icon?: string;
+		ctxId?: string;
 		class?: string;
 	}
 
@@ -23,11 +24,12 @@
 		activeTab = $bindable(tabs[0]?.id || ''),
 		title = 'Terminal',
 		icon = 'mdi:terminal',
+		ctxId = undefined,
 		class: className = ''
 	}: Props = $props();
-	
 
-	const ctx = getBrowserPodEditorContext();
+
+	const ctx = (() => resolveContext(ctxId))();
 	const { browserPodRunning } = ctx;
 
 	// Track which lazy tabs have been started

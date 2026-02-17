@@ -10,13 +10,15 @@
 		parent?: string;
 		name?: string;
 		files: TreeNode[];
+		ctxId?: string;
 	}
 
 	let {
 		expanded = $bindable(false),
 		parent = '',
 		name = '',
-		files
+		files,
+		ctxId = undefined
 	}: Props = $props();
 
 	const fullPath = $derived(`${(parent) ? `${parent}/` : ''}${name}`);
@@ -51,9 +53,9 @@
 		{#each files as file}
 			<li class="tree-item">
 				{#if file.type === "folder"}
-					<Folder {...file} parent={fullPath} />
+					<Folder {...file} parent={fullPath} {ctxId} />
 				{:else}
-					<File {...file} parent={fullPath} />
+					<File {...file} parent={fullPath} {ctxId} />
 				{/if}
 			</li>
 		{/each}

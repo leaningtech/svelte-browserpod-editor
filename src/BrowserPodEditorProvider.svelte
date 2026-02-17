@@ -1,18 +1,21 @@
 <script lang="ts">
 	import { onMount, onDestroy, createEventDispatcher, tick } from 'svelte';
 	import { get } from 'svelte/store';
-	import { createBrowserPodEditorContext } from './context.ts';
+	import { createBrowserPodEditorContext, getOrCreateStandaloneContext } from './context.ts';
 	import { BrowserPodService } from './core/BrowserPodService.ts';
 	import { loadProject, requiresVmLoading, getVmLoadConfig, extractZipBuffer } from './core/ProjectLoader.ts';
 	import type { ProjectSource } from './types.ts';
 
-	
+
 	interface Props {
 		// Props
 		projectSource: ProjectSource;
 		apiKey: string;
 		defaultFile?: string;
 		apiDomain?: string | undefined;
+		/** Share context across isolated component trees (e.g. Astro islands).
+		 *  Components with the same ctxId share state without needing a common parent. */
+		ctxId?: string;
 		onReady?: (service: BrowserPodService) => void;
 		onPortal?: ({url, port}: {url: string, port: number}) => void;
 		onError?: (type: string, message: string) => void;
@@ -24,14 +27,19 @@
 		apiKey,
 		defaultFile = '',
 		apiDomain = undefined,
+		ctxId = undefined,
 		onReady = () => {},
 		onPortal = () => {},
 		onError = () => {},
 		children
 	}: Props = $props();
 
-	// Create component-local context
-	const ctx = createBrowserPodEditorContext();
+	// Resolve context: by ctxId from the module-level registry, or create one via Svelte context.
+	// IIFE wraps the prop reference in a closure to avoid Svelte's state_referenced_locally warning.
+	const ctx = (() => {
+		if (ctxId) return getOrCreateStandaloneContext(ctxId, true);
+		return createBrowserPodEditorContext();
+	})();
 	const { browserPodRunning, fileSysReady, portalUrls, fileTree, terminals } = ctx;
 
 	let service: BrowserPodService | null = null;
@@ -79,6 +87,19 @@
 		service?.destroy();
 	});
 
+	/** Create a terminal instance (no autoRun). */
+	async function createTerminalInstance(config: import('./types.ts').TerminalConfig) {
+		if (!service || config.terminal) return;
+		const el = document.getElementById(config.id);
+		if (!el) return;
+		const terminal = await service.createTerminal(config.id, el);
+		config.terminal = terminal;
+		terminals.update(map => {
+			map.set(config.id, config);
+			return map;
+		});
+	}
+
 	async function initializeEditor() {
 		// Create BrowserPod service
 		service = new BrowserPodService({
@@ -97,23 +118,25 @@
 		await service.boot();
 		browserPodRunning.set(true);
 
+		// After boot, enhance registerTerminal so late-arriving terminals
+		// (e.g. from separate Astro islands) are created and started automatically.
+		const origRegister = ctx.registerTerminal;
+		ctx.registerTerminal = (config) => {
+			origRegister(config);
+			createTerminalInstance(config).then(() => {
+				if (config.autoRun && config.commands && config.commands.length > 0) {
+					ctx.runCommands(config.id, config.commands, config.stopOnError ?? true);
+				}
+			});
+		};
+
 		// Wait for child components to mount and register terminals
 		await tick();
 
-		// Create terminals for each registered config
+		// Create terminal instances for all already-registered configs
 		const registeredTerminals = get(terminals);
-
-		for (const [id, config] of registeredTerminals) {
-			const el = document.getElementById(id);
-			if (el) {
-				const terminal = await service.createTerminal(id, el);
-				// Store terminal reference in config
-				config.terminal = terminal;
-				terminals.update(map => {
-					map.set(id, config);
-					return map;
-				});
-			}
+		for (const [, config] of registeredTerminals) {
+			await createTerminalInstance(config);
 		}
 
 		let project;
@@ -154,14 +177,13 @@
 
 		onReady(service);
 
-		// Run commands for terminals with autoRun
+		// Run all autoRun commands in parallel (all terminals are created by now)
 		const terminalsToRun = get(terminals);
-
-		for (const [id, config] of terminalsToRun) {
-			if (config.autoRun && config.commands && config.commands.length > 0) {
-				await ctx.runCommands(id, config.commands, config.stopOnError ?? true);
-			}
-		}
+		await Promise.all(
+			[...terminalsToRun.values()]
+				.filter(config => config.autoRun && config.commands && config.commands.length > 0)
+				.map(config => ctx.runCommands(config.id, config.commands!, config.stopOnError ?? true))
+		);
 	}
 
 	// Expose service for advanced usage

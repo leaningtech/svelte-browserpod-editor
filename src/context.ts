@@ -51,7 +51,7 @@ export interface BrowserPodEditorContext {
   openFileInActiveEditor: (path: string) => void;
 }
 
-export function createBrowserPodEditorContext(): BrowserPodEditorContext {
+function _createContext(): BrowserPodEditorContext {
   const portalUrls = new SvelteMap<number, string>();
 
   const terminalsMap = new Map<string, TerminalConfig>();
@@ -139,8 +139,38 @@ export function createBrowserPodEditorContext(): BrowserPodEditorContext {
     },
   };
 
+  return context;
+}
+
+export function createBrowserPodEditorContext(): BrowserPodEditorContext {
+  const context = _createContext();
   setContext(CONTEXT_KEY, context);
   return context;
+}
+
+// Module-level registry for standalone contexts (shared across Astro islands via ctxId)
+const _standaloneContexts = new Map<string, BrowserPodEditorContext>();
+
+/** Get or create a standalone context by ID.
+ *  Components sharing the same ctxId share the same context instance.
+ *  If registerInSvelteTree is true, also calls setContext so that child
+ *  components within this Svelte tree can find it via getContext. */
+export function getOrCreateStandaloneContext(ctxId: string, registerInSvelteTree = false): BrowserPodEditorContext {
+  let ctx = _standaloneContexts.get(ctxId);
+  if (!ctx) {
+    ctx = _createContext();
+    _standaloneContexts.set(ctxId, ctx);
+  }
+  if (registerInSvelteTree) {
+    setContext(CONTEXT_KEY, ctx);
+  }
+  return ctx;
+}
+
+/** Resolve context: by ctxId from the registry, or via Svelte's getContext. */
+export function resolveContext(ctxId?: string): BrowserPodEditorContext {
+  if (ctxId) return getOrCreateStandaloneContext(ctxId);
+  return getBrowserPodEditorContext();
 }
 
 export function getBrowserPodEditorContext(): BrowserPodEditorContext {

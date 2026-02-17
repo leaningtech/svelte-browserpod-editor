@@ -4,18 +4,19 @@
 	import Spinner from './Spinner.svelte';
 	import Icon from '@iconify/svelte';
 	import QRCode from 'qrcode';
-	import { getBrowserPodEditorContext } from '../context.ts';
+	import { resolveContext } from '../context.ts';
 	import { trackEvent } from '../utils.ts';
 
 	interface Props {
 		class?: string;
 		port?: number;
+		ctxId?: string;
 	}
 
-	let { class: className = '', port = $bindable() }: Props = $props();
-	
+	let { class: className = '', port = $bindable(), ctxId = undefined }: Props = $props();
 
-	const { browserPodRunning, portalUrls } = getBrowserPodEditorContext();
+
+	const { browserPodRunning, portalUrls } = (() => resolveContext(ctxId))();
 
 	let portalUrl = $derived(port? portalUrls.get(port) : undefined);
 	$effect(() => {

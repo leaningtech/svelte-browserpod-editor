@@ -1,15 +1,16 @@
 <script lang="ts">
 	import Icon from "@iconify/svelte";
-	import { getBrowserPodEditorContext } from '../../context.ts';
-
-	const { fileSysReady, editors, openFileInActiveEditor } = getBrowserPodEditorContext();
+	import { resolveContext } from '../../context.ts';
 
 	interface Props {
 		name: string;
 		parent: string;
+		ctxId?: string;
 	}
 
-	let { name, parent }: Props = $props();
+	let { name, parent, ctxId = undefined }: Props = $props();
+
+	const { fileSysReady, editors, openFileInActiveEditor } = (() => resolveContext(ctxId))();
 	let extension = $derived(name.slice(name.lastIndexOf(".") + 1));
 
 	const fileExt: Record<string, string> = {

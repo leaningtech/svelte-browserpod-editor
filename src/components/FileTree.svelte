@@ -1,20 +1,21 @@
 <script lang="ts">
 	import Folder from './FileTree/Folder.svelte';
 	import Spinner from './Spinner.svelte';
-	import { getBrowserPodEditorContext } from '../context.ts';
+	import { resolveContext } from '../context.ts';
 
-	const { fileSysReady, fileTree } = getBrowserPodEditorContext();
-
-	
 
 	/** Optional class for styling */
 	interface Props {
 		/** Whether to expand folders by default */
 		expanded?: boolean;
+		ctxId?: string;
 		class?: string;
 	}
 
-	let { expanded = true, class: className = '' }: Props = $props();
+	let { expanded = true, ctxId = undefined, class: className = '' }: Props = $props();
+
+	const resolvedCtx = (() => resolveContext(ctxId))();
+	const { fileSysReady, fileTree } = resolvedCtx;
 	
 </script>
 
@@ -25,7 +26,7 @@
 	</div>
 {:else}
 	<div class="file-tree {className}">
-		<Folder files={$fileTree} {expanded} />
+		<Folder files={$fileTree} {expanded} {ctxId} />
 	</div>
 {/if}
 

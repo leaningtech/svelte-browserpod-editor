@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { getBrowserPodEditorContext } from '../context.ts';
+	import { resolveContext } from '../context.ts';
 
-	const { editors, activeEditorId } = getBrowserPodEditorContext();
-
-	
 
 	/** Optional class for styling */
 	interface Props {
 		/** Transform the file path for display (default: uppercase) */
 		transform?: (path: string) => string;
+		ctxId?: string;
 		class?: string;
 	}
 
-	let { transform = (p) => p.toUpperCase(), class: className = '' }: Props = $props();
+	let { transform = (p) => p.toUpperCase(), ctxId = undefined, class: className = '' }: Props = $props();
+
+	const { editors, activeEditorId } = (() => resolveContext(ctxId))();
 	
 
 	// Get file path from active editor
