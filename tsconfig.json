@@ -12,6 +12,7 @@
 		"sourceMap": true,
 		"strict": true,
 		"moduleResolution": "bundler",
+		"rewriteRelativeImportExtensions": true,
 		"declaration": true,
 		"declarationMap": true,
 		"outDir": "./dist",
