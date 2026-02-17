@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getBrowserPodEditorContext } from '../context';
+	import { getBrowserPodEditorContext } from '../context.ts';
 
 	const { editors, activeEditorId } = getBrowserPodEditorContext();
 

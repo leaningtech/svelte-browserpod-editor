@@ -21,14 +21,14 @@ export { default as Container } from './components/Container.svelte';
 export { default as Spinner } from './components/Spinner.svelte';
 
 // Context
-export { getBrowserPodEditorContext, createBrowserPodEditorContext } from './context';
-export type { BrowserPodEditorContext } from './context';
+export { getBrowserPodEditorContext, createBrowserPodEditorContext } from './context.ts';
+export type { BrowserPodEditorContext } from './context.ts';
 
 // Core services
-export { BrowserPodService } from './core/BrowserPodService';
-export { loadManifest, buildFileTree } from './core/ManifestLoader';
-export { loadProject, requiresVmLoading, getVmLoadConfig, extractZipBuffer } from './core/ProjectLoader';
-export type { LoadedProject } from './core/ProjectLoader';
+export { BrowserPodService } from './core/BrowserPodService.ts';
+export { loadManifest, buildFileTree } from './core/ManifestLoader.ts';
+export { loadProject, requiresVmLoading, getVmLoadConfig, extractZipBuffer } from './core/ProjectLoader.ts';
+export type { LoadedProject } from './core/ProjectLoader.ts';
 
 // Types
 export type {
@@ -48,8 +48,8 @@ export type {
   TerminalConfig,
   TerminalTab,
   EditorConfig,
-} from './types';
+} from './types.ts';
 
 // Utilities
-export { debounce, trackEvent, setAnalyticsCallback } from './utils';
-export type { AnalyticsCallback } from './utils';
+export { debounce, trackEvent, setAnalyticsCallback } from './utils.ts';
+export type { AnalyticsCallback } from './utils.ts';

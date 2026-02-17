@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Folder from './FileTree/Folder.svelte';
 	import Spinner from './Spinner.svelte';
-	import { getBrowserPodEditorContext } from '../context';
+	import { getBrowserPodEditorContext } from '../context.ts';
 
 	const { fileSysReady, fileTree } = getBrowserPodEditorContext();
 

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount, onDestroy, createEventDispatcher, tick } from 'svelte';
 	import { get } from 'svelte/store';
-	import { createBrowserPodEditorContext } from './context';
-	import { BrowserPodService } from './core/BrowserPodService';
-	import { loadProject, requiresVmLoading, getVmLoadConfig, extractZipBuffer } from './core/ProjectLoader';
-	import type { ProjectSource } from './types';
+	import { createBrowserPodEditorContext } from './context.ts';
+	import { BrowserPodService } from './core/BrowserPodService.ts';
+	import { loadProject, requiresVmLoading, getVmLoadConfig, extractZipBuffer } from './core/ProjectLoader.ts';
+	import type { ProjectSource } from './types.ts';
 
 	
 	interface Props {

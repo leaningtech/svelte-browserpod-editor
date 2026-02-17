@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from "@iconify/svelte";
-	import { getBrowserPodEditorContext } from '../../context';
+	import { getBrowserPodEditorContext } from '../../context.ts';
 
 	const { fileSysReady, editors, openFileInActiveEditor } = getBrowserPodEditorContext();
 

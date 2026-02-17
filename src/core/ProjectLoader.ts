@@ -1,8 +1,8 @@
 /**
  * ProjectLoader - Load projects from various sources (local, zip, GitHub)
  */
-import type { ProjectSource, ProjectFile, TreeNode, FolderNode, FileNode } from '../types';
-import { loadManifest } from './ManifestLoader';
+import type { ProjectSource, ProjectFile, TreeNode, FolderNode, FileNode } from '../types.ts';
+import { loadManifest } from './ManifestLoader.ts';
 
 export interface LoadedProject {
   files: ProjectFile[];

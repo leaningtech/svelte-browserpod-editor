@@ -4,8 +4,8 @@
 	import Spinner from './Spinner.svelte';
 	import Icon from '@iconify/svelte';
 	import QRCode from 'qrcode';
-	import { getBrowserPodEditorContext } from '../context';
-	import { trackEvent } from '../utils';
+	import { getBrowserPodEditorContext } from '../context.ts';
+	import { trackEvent } from '../utils.ts';
 
 	interface Props {
 		class?: string;

@@ -1,7 +1,7 @@
 /**
  * ManifestLoader - Parse manifest.txt and build file tree
  */
-import type { TreeNode, FolderNode, FileNode } from '../types';
+import type { TreeNode, FolderNode, FileNode } from '../types.ts';
 
 /**
  * Load and parse a manifest.txt file

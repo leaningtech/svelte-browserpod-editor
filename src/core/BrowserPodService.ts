@@ -2,8 +2,8 @@
  * BrowserPodService - Class-based wrapper for BrowserPod
  */
 import { BrowserPod } from '@leaningtech/browserpod';
-import type { BrowserPodServiceOptions, ProjectFile } from '../types';
-import { trackEvent } from '../utils';
+import type { BrowserPodServiceOptions, ProjectFile } from '../types.ts';
+import { trackEvent } from '../utils.ts';
 
 export class BrowserPodService {
   private pod: any = null;

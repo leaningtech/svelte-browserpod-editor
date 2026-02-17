@@ -4,7 +4,7 @@
 import { getContext, setContext } from 'svelte';
 import { get, writable, type Writable } from 'svelte/store';
 import { SvelteMap } from 'svelte/reactivity';
-import type { TreeNode, TerminalConfig, EditorConfig } from './types';
+import type { TreeNode, TerminalConfig, EditorConfig } from './types.ts';
 
 const CONTEXT_KEY = Symbol('BrowserPodEditor');
 

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import Container from './Container.svelte';
-	import { getBrowserPodEditorContext } from '../context';
-	import type { TerminalTab } from '../types';
+	import { getBrowserPodEditorContext } from '../context.ts';
+	import type { TerminalTab } from '../types.ts';
 
 	interface Props {
 		/** Configuration for terminal tabs */

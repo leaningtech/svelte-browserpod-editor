@@ -3,7 +3,7 @@
 	import Icon from "@iconify/svelte";
 	import File from "./File.svelte";
 	import { slide } from "svelte/transition";
-	import type { TreeNode } from '../../types';
+	import type { TreeNode } from '../../types.ts';
 
 	interface Props {
 		expanded?: boolean;
