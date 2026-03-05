@@ -3,8 +3,6 @@
 	import Spinner from './Spinner.svelte';
 	import { resolveContext } from '../context.ts';
 
-
-	/** Optional class for styling */
 	interface Props {
 		/** Whether to expand folders by default */
 		expanded?: boolean;
@@ -16,7 +14,6 @@
 
 	const resolvedCtx = (() => resolveContext(ctxId))();
 	const { fileSysReady, fileTree } = resolvedCtx;
-	
 </script>
 
 {#if !$fileSysReady}
@@ -41,8 +38,8 @@
 	}
 
 	.loading-text {
-		font-size: 0.875rem;
-		color: var(--bpe-color-text-secondary);
+		font-size: 0.75rem;
+		color: rgba(255, 255, 255, 0.3);
 		margin: 0;
 	}
 
@@ -50,13 +47,19 @@
 		flex: 1;
 		min-height: 0;
 		overflow-y: auto;
+		padding: 0.25rem 0;
 	}
 
 	.file-tree::-webkit-scrollbar {
-		width: 6px;
+		width: 4px;
 	}
 
 	.file-tree::-webkit-scrollbar-track {
 		background: transparent;
+	}
+
+	.file-tree::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: 2px;
 	}
 </style>

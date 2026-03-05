@@ -11,8 +11,6 @@
 		activeTab?: string;
 		/** Title for the container */
 		title?: string;
-		/** Icon for the container */
-		icon?: string;
 		ctxId?: string;
 		class?: string;
 	}
@@ -22,22 +20,17 @@
 		{ id: 'terminal', label: 'Terminal', commands: [['/npm/bin/npm.js', 'install']], autoRun: true },
 	],
 		activeTab = $bindable(tabs[0]?.id || ''),
-		title = 'Terminal',
-		icon = 'mdi:terminal',
+		title = '',
 		ctxId = undefined,
 		class: className = ''
 	}: Props = $props();
 
-
 	const ctx = (() => resolveContext(ctxId))();
 	const { browserPodRunning } = ctx;
 
-	// Track which lazy tabs have been started
 	let startedTabs = new Set<string>();
-	// Track tabs activated before pod was ready
 	let pendingTabIds: string[] = $state([]);
-
-	let contentEl: HTMLDivElement = $state();
+	let contentEl: HTMLDivElement | undefined = $state();
 	let resizeObserver: ResizeObserver;
 
 	function fitTerminal(xterm: any, container: HTMLElement) {
@@ -60,7 +53,6 @@
 	}
 
 	onMount(() => {
-		// Register all terminals
 		for (const tab of tabs) {
 			ctx.registerTerminal({
 				id: tab.id,
@@ -79,7 +71,7 @@
 				}
 			}
 		});
-		resizeObserver.observe(contentEl);
+		if (contentEl) resizeObserver.observe(contentEl);
 	});
 
 	onDestroy(() => {
@@ -92,25 +84,22 @@
 	function startTab(tab: TerminalTab) {
 		if (startedTabs.has(tab.id)) return;
 		startedTabs.add(tab.id);
-		startedTabs = startedTabs; // trigger reactivity
+		startedTabs = startedTabs;
 		ctx.runCommands(tab.id, tab.commands!, tab.stopOnError ?? true);
 	}
 
 	function handleTabClick(tab: TerminalTab) {
 		activeTab = tab.id;
 
-		// Handle lazy-start terminals
 		if (tab.runOnActivate && tab.commands && tab.commands.length > 0) {
 			if ($browserPodRunning) {
 				startTab(tab);
 			} else if (!pendingTabIds.includes(tab.id)) {
-				// Mark as pending — the $effect below will start it once the pod is ready
 				pendingTabIds = [...pendingTabIds, tab.id];
 			}
 		}
 	}
 
-	// When pod becomes ready, start any tabs that were activated while waiting
 	$effect(() => {
 		if ($browserPodRunning && pendingTabIds.length > 0) {
 			for (const tab of tabs) {
@@ -125,12 +114,11 @@
 
 <Container
 	{title}
-	{icon}
 	class={className}
 >
-	{#snippet actions()}
-		<div class="tabbed-terminal" >
-			{#if tabs.length > 1}
+	{#snippet headerInline()}
+		{#if tabs.length > 1}
+			<div class="terminal-tabs">
 				{#each tabs as tab}
 					<button
 						type="button"
@@ -141,8 +129,10 @@
 						{tab.label}
 					</button>
 				{/each}
-			{/if}
-		</div>
+			</div>
+		{:else if tabs.length === 1 && !title}
+			<span class="terminal-single-label">{tabs[0].label}</span>
+		{/if}
 	{/snippet}
 
 	<div class="terminal-content" bind:this={contentEl}>
@@ -157,34 +147,34 @@
 </Container>
 
 <style>
-	.tabbed-terminal {
+	.terminal-tabs {
 		display: flex;
 		align-items: center;
-		margin-left: auto;
+		gap: 1rem;
 	}
 
 	.terminal-tab {
-		font-size: 0.75rem;
-		font-weight: 500;
-		padding: 0.5rem 0.75rem;
-		margin-block: calc(var(--bpe-container-header-padding) * -1);
+		font-size: 0.875rem;
+		font-weight: 400;
+		padding: 0;
 		border: none;
 		background: none;
 		cursor: pointer;
 		transition: color 0.2s;
 		color: var(--bpe-color-text-muted);
 	}
-	.terminal-tab:last-child {
-		margin-inline-end: calc(var(--bpe-container-header-padding) * -1);
-	}
 
 	.terminal-tab:hover:not(.active) {
-		color: var(--bpe-color-text);
+		color: var(--bpe-color-text-hover);
 	}
 
 	.terminal-tab.active {
-		color: var(--bpe-color-text-active);
-		background-color: var(--bpe-color-tab-active);
+		color: var(--bpe-color-text-header);
+	}
+
+	.terminal-single-label {
+		font-size: 0.875rem;
+		color: var(--bpe-color-text-header);
 	}
 
 	.terminal-content {

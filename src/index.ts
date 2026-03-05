@@ -19,6 +19,11 @@ export { default as FileTree } from './components/FileTree.svelte';
 export { default as CurrentFile } from './components/CurrentFile.svelte';
 export { default as Container } from './components/Container.svelte';
 export { default as Spinner } from './components/Spinner.svelte';
+export { default as Separator } from './components/Separator.svelte';
+export { default as DropdownMenu } from './components/DropdownMenu.svelte';
+
+// Theme constants
+export { browserpodTheme, browserpodHighlight } from './constants/theme.ts';
 
 // Context
 export { getBrowserPodEditorContext, createBrowserPodEditorContext } from './context.ts';

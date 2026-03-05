@@ -2,50 +2,41 @@
  * BrowserPod Editor - Default Theme
  *
  * Import this file to get sensible default values for all CSS variables.
- * You can override any of these by defining the same variables in your own CSS.
+ * Override any of these by defining the same variables in your own CSS.
  *
  * Usage:
  *   import '@leaningtech/browserpod-editor/theme.css';
- *
- * Or override specific variables:
- *   :root {
- *     --bpe-color-primary: #your-color;
- *   }
  */
 
 :root {
   /* ===== Core Colors ===== */
   --bpe-color-primary: #00b3a0;
   --bpe-color-primary-hover: #00a090;
-  --bpe-color-text: #e5e7eb;
-  --bpe-color-text-muted: rgb(113, 113, 122);
-  --bpe-color-text-secondary: #9ca3af;
+  --bpe-color-text: #d4d4d8;
+  --bpe-color-text-header: rgba(255, 255, 255, 0.8);
+  --bpe-color-text-muted: rgba(255, 255, 255, 0.3);
+  --bpe-color-text-hover: rgba(255, 255, 255, 0.5);
   --bpe-color-text-active: white;
   --bpe-color-text-on-primary: white;
-  --bpe-color-border: rgba(255, 255, 255, 0.15);
+  --bpe-color-border: #23252a;
   --bpe-color-bg-hover: rgba(255, 255, 255, 0.05);
-  --bpe-color-button-secondary: #64748b;
   --bpe-color-spinner: var(--bpe-color-primary);
 
+  /* ===== Separator ===== */
+  --bpe-color-separator: #23252a;
+  --bpe-separator-hover-delay: 200ms;
+
+  /* ===== Dropdown ===== */
+  --bpe-color-dropdown-bg: #1e2025;
+
   /* ===== Container ===== */
-  --bpe-container-header-background: rgba(24, 24, 27, 0.8);
-  --bpe-container-header-padding: 0.5rem;
-  --bpe-container-header-title-color: var(--bpe-color-text-muted);
-  --bpe-container-border-radius: 0.5rem;
+  --bpe-container-header-padding: 0.5rem 1rem;
   --bpe-container-content-min-height: 0;
 
   /* ===== Terminal ===== */
-  --bpe-color-terminal-bg: rgb(9, 9, 11);
+  --bpe-color-terminal-bg: #101012;
   --bpe-color-tab-active: rgba(255, 255, 255, 0.08);
 
   /* ===== CodeMirror Editor ===== */
-  --bpe-editor-font-family: "Fira Code", "JetBrains Mono", monospace;
-  --bpe-editor-font-size: 0.85rem;
-  --bpe-editor-text-color: rgba(255, 255, 255, 0.9);
-  --bpe-editor-cursor-color: white;
-  --bpe-editor-gutter-bg: rgba(0, 0, 0, 0.2);
-  --bpe-editor-gutter-border: rgba(255, 255, 255, 0.15);
-  --bpe-editor-gutter-text: rgba(255, 255, 255, 0.5);
-  --bpe-editor-active-line-bg: rgba(255, 255, 255, 0.05);
   --bpe-editor-active-border: 2px solid var(--bpe-color-primary);
 }

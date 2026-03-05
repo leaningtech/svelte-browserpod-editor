@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Folder from './Folder.svelte';
-	import Icon from "@iconify/svelte";
 	import File from "./File.svelte";
 	import { slide } from "svelte/transition";
 	import type { TreeNode } from '../../types.ts';
@@ -22,7 +21,6 @@
 	}: Props = $props();
 
 	const fullPath = $derived(`${(parent) ? `${parent}/` : ''}${name}`);
-	// Display name for UI - 'project' for root, actual name otherwise
 	const displayName = $derived(name || 'project');
 
 	function toggle() {
@@ -31,27 +29,16 @@
 </script>
 
 <button class="folder-btn" onclick={toggle}>
-	<div class="folder-icon">
-		{#if expanded}
-			<Icon width="16" icon="mdi:folder-open" color="var(--bpe-color-primary)"/>
-		{:else}
-			<Icon width="16" icon="mdi:folder" color="var(--bpe-color-primary)"/>
-		{/if}
-	</div>
+	<svg class="chevron" class:expanded width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+		<polyline points="4 3 8 6 4 9" />
+	</svg>
 	<span class="folder-name">{displayName}</span>
-	<div class="expand-icon">
-		{#if expanded}
-			<Icon width="14" icon="mdi:chevron-down" />
-		{:else}
-			<Icon width="14" icon="mdi:chevron-right" />
-		{/if}
-	</div>
 </button>
 
 {#if expanded}
-	<ul class="tree-items-list" transition:slide={{ duration: 300 }}>
+	<ul class="tree-list" transition:slide={{ duration: 150 }}>
 		{#each files as file}
-			<li class="tree-item">
+			<li>
 				{#if file.type === "folder"}
 					<Folder {...file} parent={fullPath} {ctxId} />
 				{:else}
@@ -66,28 +53,31 @@
 	.folder-btn {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.25rem;
 		width: 100%;
-		padding: 0.5rem;
+		padding: 0.2rem 0.5rem;
 		border: none;
 		background: none;
 		cursor: pointer;
 		text-align: left;
-		border-radius: 0.375rem;
-		transition: all 0.2s ease;
-		color: var(--bpe-color-text);
-		font-size: 0.875rem;
+		transition: background 0.15s;
+		color: rgba(255, 255, 255, 0.7);
+		font-size: 0.8125rem;
 	}
 
 	.folder-btn:hover {
-		background: var(--bpe-color-bg-hover);
-		color: var(--bpe-color-primary);
+		background: rgba(255, 255, 255, 0.05);
+		color: rgba(255, 255, 255, 0.9);
 	}
 
-	.folder-icon {
-		display: flex;
-		align-items: center;
+	.chevron {
 		flex-shrink: 0;
+		color: rgba(255, 255, 255, 0.3);
+		transition: transform 0.15s ease;
+	}
+
+	.chevron.expanded {
+		transform: rotate(90deg);
 	}
 
 	.folder-name {
@@ -99,39 +89,14 @@
 		white-space: nowrap;
 	}
 
-	.expand-icon {
-		display: flex;
-		align-items: center;
-		flex-shrink: 0;
-		opacity: 0.6;
-		transition: opacity 0.2s ease;
-	}
-
-	.folder-btn:hover .expand-icon {
-		opacity: 1;
-	}
-
-	.tree-items-list {
+	.tree-list {
 		list-style: none;
 		margin: 0;
-		padding: 0 0 0 1rem;
-		border-left: 1px solid var(--bpe-color-border);
-		margin-left: 0.5rem;
+		padding: 0 0 0 0.75rem;
 	}
 
-	.tree-item {
-		position: relative;
+	li {
 		margin: 0;
 		padding: 0;
-	}
-
-	.tree-item::before {
-		content: '';
-		position: absolute;
-		left: -1px;
-		top: 1rem;
-		width: 0.75rem;
-		height: 1px;
-		background: var(--bpe-color-border);
 	}
 </style>
