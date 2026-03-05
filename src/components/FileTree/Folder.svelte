@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Icon from '@iconify/svelte';
 	import Folder from './Folder.svelte';
 	import File from "./File.svelte";
 	import { slide } from "svelte/transition";
@@ -29,9 +30,9 @@
 </script>
 
 <button class="folder-btn" onclick={toggle}>
-	<svg class="chevron" class:expanded width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-		<polyline points="4 3 8 6 4 9" />
-	</svg>
+	<span class="chevron" class:expanded>
+		<Icon icon="tabler:chevron-right" width="12" height="12" />
+	</span>
 	<span class="folder-name">{displayName}</span>
 </button>
 
@@ -71,6 +72,7 @@
 	}
 
 	.chevron {
+		display: flex;
 		flex-shrink: 0;
 		color: rgba(255, 255, 255, 0.3);
 		transition: transform 0.15s ease;

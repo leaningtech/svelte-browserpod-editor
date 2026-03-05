@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import Icon from '@iconify/svelte';
 	import Container from './Container.svelte';
 	import DropdownMenu from './DropdownMenu.svelte';
 	import DropdownItem from './DropdownItem.svelte';
@@ -100,39 +101,31 @@
 		{#if isPortalAvailable}
 			<DropdownMenu align="right">
 				{#snippet trigger()}
-					<svg class="icon-btn" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-						<circle cx="12" cy="5" r="1" fill="currentColor" /><circle cx="12" cy="12" r="1" fill="currentColor" /><circle cx="12" cy="19" r="1" fill="currentColor" />
-					</svg>
+					<button class="icon-trigger">
+						<Icon icon="tabler:adjustments-horizontal" width="20" height="20" />
+					</button>
 				{/snippet}
 				<DropdownItem onclick={refreshPreview}>
 					{#snippet icon()}
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
-						</svg>
+						<Icon icon="tabler:refresh" width="16" height="16" />
 					{/snippet}
 					Refresh
 				</DropdownItem>
 				<DropdownItem onclick={copyPortalUrl}>
 					{#snippet icon()}
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-						</svg>
+						<Icon icon="tabler:copy" width="16" height="16" />
 					{/snippet}
 					{copied ? 'Copied!' : 'Copy URL'}
 				</DropdownItem>
 				<DropdownItem onclick={openInNewTab}>
 					{#snippet icon()}
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
-						</svg>
+						<Icon icon="tabler:external-link" width="16" height="16" />
 					{/snippet}
 					Open in New Tab
 				</DropdownItem>
 				<DropdownItem onclick={toggleQr}>
 					{#snippet icon()}
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="17" y="17" width="4" height="4" />
-						</svg>
+						<Icon icon="tabler:qrcode" width="16" height="16" />
 					{/snippet}
 					{showQr ? 'Hide QR Code' : 'QR Code'}
 				</DropdownItem>
@@ -173,18 +166,25 @@
 	</div>
 </Container>
 
+
 <style>
-	.icon-btn {
-		color: rgba(255, 255, 255, 0.3);
-		transition: color 0.2s;
+	.icon-trigger {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
 		cursor: pointer;
+		padding: 0;
+		color: rgba(255, 255, 255, 0.5);
+		transition: color 0.2s;
 	}
 
-	.icon-btn:hover {
-		color: rgba(255, 255, 255, 0.6);
+	.icon-trigger:hover {
+		color: rgba(255, 255, 255, 0.8);
 	}
 
-.portal-content {
+	.portal-content {
 		width: 100%;
 		height: 100%;
 		display: flex;

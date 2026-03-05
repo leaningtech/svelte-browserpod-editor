@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import Icon from '@iconify/svelte';
 	import BrowserPodEditorProvider from '../src/BrowserPodEditorProvider.svelte';
 	import EditorPanel from '../src/components/EditorPanel.svelte';
 	import PreviewPanel from '../src/components/PreviewPanel.svelte';
@@ -129,9 +130,7 @@
 				<Container title="Editor">
 					{#snippet actions()}
 						<button class="filetree-toggle" onclick={() => fileTreeOpen = !fileTreeOpen} title={fileTreeOpen ? 'Hide files' : 'Show files'}>
-							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-								<rect x="2" y="2" width="4" height="5" rx="0.5" /><rect x="2" y="9" width="4" height="5" rx="0.5" /><line x1="9" y1="4" x2="14" y2="4" /><line x1="9" y1="8" x2="14" y2="8" /><line x1="9" y1="12" x2="14" y2="12" />
-							</svg>
+							<Icon icon={fileTreeOpen ? "tabler:layout-sidebar-filled" : "tabler:layout-sidebar-inactive"} width="16" height="16" />
 						</button>
 					{/snippet}
 					<div class="editor-with-tree" bind:this={editorWithTreeRef}>
