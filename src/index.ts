@@ -21,6 +21,7 @@ export { default as Container } from './components/Container.svelte';
 export { default as Spinner } from './components/Spinner.svelte';
 export { default as Separator } from './components/Separator.svelte';
 export { default as DropdownMenu } from './components/DropdownMenu.svelte';
+export { default as DropdownItem } from './components/DropdownItem.svelte';
 
 // Theme constants
 export { browserpodTheme, browserpodHighlight } from './constants/theme.ts';

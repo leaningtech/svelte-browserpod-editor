@@ -20,6 +20,10 @@
 			open = false;
 		}
 	}
+
+	function handlePanelClick() {
+		open = false;
+	}
 </script>
 
 <svelte:window onclick={handleClickOutside} />
@@ -34,6 +38,10 @@
 			class="dropdown-panel"
 			class:dropdown-align-right={align === 'right'}
 			class:dropdown-align-left={align === 'left'}
+			onclick={handlePanelClick}
+			onkeydown={() => {}}
+			role="menu"
+			tabindex="-1"
 		>
 			{@render children()}
 		</div>
@@ -57,14 +65,16 @@
 	.dropdown-panel {
 		position: absolute;
 		top: 100%;
-		margin-top: 0.25rem;
+		margin-top: 0.375rem;
 		z-index: 50;
-		min-width: 9rem;
-		border-radius: 0.375rem;
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		min-width: 10rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--bpe-color-dropdown-border, rgba(255, 255, 255, 0.1));
 		background: var(--bpe-color-dropdown-bg, #1e2025);
-		padding: 0.25rem 0;
-		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+		padding: 0.25rem;
+		box-shadow:
+			0 4px 6px -1px rgba(0, 0, 0, 0.3),
+			0 10px 15px -3px rgba(0, 0, 0, 0.2);
 		animation: menuIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 		transform-origin: top;
 	}

@@ -8,6 +8,33 @@
  *   import '@leaningtech/browserpod-editor/theme.css';
  */
 
+/* Global scrollbar styling */
+::-webkit-scrollbar {
+  width: var(--bpe-scrollbar-width);
+  height: var(--bpe-scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bpe-scrollbar-track-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bpe-scrollbar-thumb-bg);
+  border-radius: 4px;
+  border: 2px solid var(--bpe-scrollbar-track-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bpe-scrollbar-thumb-bg-hover);
+}
+
+/* Firefox scrollbar styling */
+html,
+body {
+  scrollbar-color: var(--bpe-scrollbar-thumb-bg) var(--bpe-scrollbar-track-bg);
+  scrollbar-width: thin;
+}
+
 :root {
   /* ===== Core Colors ===== */
   --bpe-color-primary: #00b3a0;
@@ -39,4 +66,10 @@
 
   /* ===== CodeMirror Editor ===== */
   --bpe-editor-active-border: 2px solid var(--bpe-color-primary);
+
+  /* ===== Scrollbars ===== */
+  --bpe-scrollbar-width: 8px;
+  --bpe-scrollbar-thumb-bg: rgba(255, 255, 255, 0.15);
+  --bpe-scrollbar-thumb-bg-hover: rgba(255, 255, 255, 0.25);
+  --bpe-scrollbar-track-bg: transparent;
 }

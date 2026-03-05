@@ -7,7 +7,7 @@
 	import FileTree from '../src/components/FileTree.svelte';
 	import Container from '../src/components/Container.svelte';
 	import Separator from '../src/components/Separator.svelte';
-	import type { ProjectSource, TerminalTab } from '../src/types.ts';
+	import type { ProjectSource, TerminalTab } from '../src/types';
 
 	let fileTreeOpen = $state(true);
 	let fileTreeWidth = $state(180);

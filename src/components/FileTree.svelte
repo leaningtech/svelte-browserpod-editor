@@ -49,17 +49,4 @@
 		overflow-y: auto;
 		padding: 0.25rem 0;
 	}
-
-	.file-tree::-webkit-scrollbar {
-		width: 4px;
-	}
-
-	.file-tree::-webkit-scrollbar-track {
-		background: transparent;
-	}
-
-	.file-tree::-webkit-scrollbar-thumb {
-		background: rgba(255, 255, 255, 0.1);
-		border-radius: 2px;
-	}
 </style>
