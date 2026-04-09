@@ -121,7 +121,7 @@ export class BrowserPodService {
     await this.pod.run(executable, args, {
       echo: options.echo ?? true,
       terminal,
-      cwd: options.cwd ?? '/files',
+      cwd: options.cwd,
     });
   }
 
@@ -134,15 +134,15 @@ export class BrowserPodService {
       throw new Error('BrowserPod not initialized');
     }
 
-    await this.pod.createDirectory('/files');
+    await this.pod.createDirectory('/home/user');
     for (const file of files) {
       const parts = file.path.split('/');
       if (parts.length > 1) {
         parts.pop();
         const dir = parts.join('/');
-        await this.pod.createDirectory(`/files/${dir}`, { recursive: true });
+        await this.pod.createDirectory(`/home/user/${dir}`, { recursive: true });
       }
-      const f = await this.pod.createFile(`/files/${file.path}`, 'binary');
+      const f = await this.pod.createFile(`/home/user/${file.path}`, 'binary');
       const copy = new Uint8Array(file.content);
       await f.write(copy.buffer);
       await f.close();
@@ -151,14 +151,14 @@ export class BrowserPodService {
 
   /**
    * Load file content from BrowserPod
-   * @param filename File path relative to /files/
+   * @param filename File path relative to /home/user/
    */
   async loadFile(filename: string): Promise<string> {
     if (!this.pod) {
       throw new Error('BrowserPod not initialized');
     }
 
-    const fullPath = `/files/${filename}`;
+    const fullPath = `/home/user/${filename}`;
     try {
       const f = await this.pod.openFile(fullPath, 'utf-8');
       const size = await f.getSize();
@@ -172,7 +172,7 @@ export class BrowserPodService {
 
   /**
    * Save file content to BrowserPod
-   * @param filename File path relative to /files/
+   * @param filename File path relative to /home/user/
    * @param content File content
    */
   async saveFile(filename: string, content: string): Promise<boolean> {
@@ -180,13 +180,13 @@ export class BrowserPodService {
       throw new Error('BrowserPod not initialized');
     }
 
-    const fullPath = `/files/${filename}`;
+    const fullPath = `/home/user/${filename}`;
     try {
       const parts = filename.split('/');
       parts.pop();
       const dir = parts.join('/');
       if (dir) {
-        await this.pod.createDirectory(`/files/${dir}`, { recursive: true });
+        await this.pod.createDirectory(`/home/user/${dir}`, { recursive: true });
       }
       const f = await this.pod.createFile(fullPath, 'utf-8');
       await f.write(content);

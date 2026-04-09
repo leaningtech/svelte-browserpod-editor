@@ -66,7 +66,8 @@
 				id: tab.id,
 				commands: tab.commands,
 				autoRun: tab.autoRun ?? false,
-				stopOnError: tab.stopOnError ?? true
+				stopOnError: tab.stopOnError ?? true,
+				cwd: tab.cwd
 			});
 		}
 
@@ -93,7 +94,7 @@
 		if (startedTabs.has(tab.id)) return;
 		startedTabs.add(tab.id);
 		startedTabs = startedTabs; // trigger reactivity
-		ctx.runCommands(tab.id, tab.commands!, tab.stopOnError ?? true);
+		ctx.runCommands(tab.id, tab.commands!, tab.stopOnError ?? true, tab.cwd);
 	}
 
 	function handleTabClick(tab: TerminalTab) {

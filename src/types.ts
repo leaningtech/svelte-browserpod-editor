@@ -101,6 +101,8 @@ export interface TerminalConfig {
   autoRun?: boolean;
   /** Stop executing if a command fails (default: true) */
   stopOnError?: boolean;
+  /** Working directory for commands (defaults to BrowserPod's default) */
+  cwd?: string;
   /** Internal: the terminal instance */
   terminal?: any;
 }
@@ -118,6 +120,8 @@ export interface TerminalTab {
   runOnActivate?: boolean;
   /** Stop executing if a command fails (default: true) */
   stopOnError?: boolean;
+  /** Working directory for commands (defaults to BrowserPod's default) */
+  cwd?: string;
 }
 
 export interface EditorConfig {

@@ -55,16 +55,16 @@
 		return service.saveFile(filename, content);
 	};
 
-	ctx.runCommand = async (terminalId: string, command: string[]) => {
+	ctx.runCommand = async (terminalId: string, command: string[], cwd?: string) => {
 		if (!service) throw new Error('Service not initialized');
-		return service.runCommand(command, terminalId);
+		return service.runCommand(command, terminalId, { cwd });
 	};
 
-	ctx.runCommands = async (terminalId: string, commands: string[][], stopOnError = true) => {
+	ctx.runCommands = async (terminalId: string, commands: string[][], stopOnError = true, cwd?: string) => {
 		if (!service) throw new Error('Service not initialized');
 		for (const command of commands) {
 			try {
-				await service.runCommand(command, terminalId);
+				await service.runCommand(command, terminalId, { cwd });
 			} catch (e) {
 				console.error(`Command failed: ${command.join(' ')}`, e);
 				if (stopOnError) {
@@ -125,7 +125,7 @@
 			origRegister(config);
 			createTerminalInstance(config).then(() => {
 				if (config.autoRun && config.commands && config.commands.length > 0) {
-					ctx.runCommands(config.id, config.commands, config.stopOnError ?? true);
+					ctx.runCommands(config.id, config.commands, config.stopOnError ?? true, config.cwd);
 				}
 			});
 		};
@@ -182,7 +182,7 @@
 		await Promise.all(
 			[...terminalsToRun.values()]
 				.filter(config => config.autoRun && config.commands && config.commands.length > 0)
-				.map(config => ctx.runCommands(config.id, config.commands!, config.stopOnError ?? true))
+				.map(config => ctx.runCommands(config.id, config.commands!, config.stopOnError ?? true, config.cwd))
 		);
 	}
 

@@ -34,9 +34,9 @@ export interface BrowserPodEditorContext {
   /** Unregister a terminal panel */
   unregisterTerminal: (id: string) => void;
   /** Run a single command in a specific terminal */
-  runCommand: (terminalId: string, command: string[]) => Promise<void>;
+  runCommand: (terminalId: string, command: string[], cwd?: string) => Promise<void>;
   /** Run multiple commands sequentially in a specific terminal */
-  runCommands: (terminalId: string, commands: string[][], stopOnError?: boolean) => Promise<void>;
+  runCommands: (terminalId: string, commands: string[][], stopOnError?: boolean, cwd?: string) => Promise<void>;
   /** Get a terminal instance by ID */
   getTerminal: (id: string) => any;
   /** Register an editor panel and return assigned ID */
