@@ -1,48 +1,36 @@
 /**
  * BrowserPodService - Class-based wrapper for BrowserPod
  */
-import { BrowserPod } from '@leaningtech/browserpod';
-import type { BrowserPodServiceOptions, ProjectFile } from '../types.ts';
+import type { BrowserPodInstance, BrowserPodServiceOptions, ProjectFile } from '../types.ts';
 import { trackEvent } from '../utils.ts';
 
 export class BrowserPodService {
-  private pod: any = null;
+  private pod: BrowserPodInstance | null = null;
+  private podPromise: Promise<BrowserPodInstance>;
   private terminals: Map<string, any> = new Map();
   private defaultTerminalId: string | null = null;
-  private apiKey: string;
-  private apiDomain?: string;
-  private onPortal?: ({url, port}: {url: string, port: number}) => void;
+  private onPortalCallback?: ({url, port}: {url: string, port: number}) => void;
   private onError?: (error: Error) => void;
 
   constructor(options: BrowserPodServiceOptions) {
-    this.apiKey = options.apiKey;
-    this.apiDomain = options.apiDomain;
-    this.onPortal = options.onPortal;
+    this.podPromise = options.pod;
+    this.onPortalCallback = options.onPortal;
     this.onError = options.onError;
   }
 
   /**
-   * Initialize BrowserPod (boot only, no terminal creation)
+   * Await the pod promise, wire up the portal listener, and cache the instance.
    */
-  async boot(): Promise<void> {
+  async ready(): Promise<void> {
     try {
-      const bootOptions: { apiKey: string; apiDomain?: string } = {
-        apiKey: this.apiKey,
-      };
-      if (this.apiDomain) {
-        bootOptions.apiDomain = this.apiDomain;
-      }
-
-      this.pod = await BrowserPod.boot(bootOptions);
-
-      trackEvent('BrowserPodBoot');
-
-      this.pod.onPortal((data: {url: string, port: number}) => {
+      this.pod = await this.podPromise;
+      this.pod.onPortal((data) => {
         if (data && data.url) {
           trackEvent('LoadedPortal');
-          this.onPortal?.(data);
+          this.onPortalCallback?.(data);
         }
       });
+      trackEvent('BrowserPodReady');
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
       this.onError?.(err);

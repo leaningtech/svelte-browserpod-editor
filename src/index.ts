@@ -35,6 +35,8 @@ export type {
   TreeNode,
   FolderNode,
   FileNode,
+  BrowserPodFileHandle,
+  BrowserPodInstance,
   ProjectSource,
   LocalProjectSource,
   ZipProjectSource,

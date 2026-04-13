@@ -4,15 +4,14 @@
 	import { createBrowserPodEditorContext, getOrCreateStandaloneContext } from './context.ts';
 	import { BrowserPodService } from './core/BrowserPodService.ts';
 	import { loadProject, requiresVmLoading, getVmLoadConfig, extractZipBuffer } from './core/ProjectLoader.ts';
-	import type { ProjectSource } from './types.ts';
+	import type { BrowserPodInstance, ProjectSource } from './types.ts';
 
 
 	interface Props {
 		// Props
 		projectSource: ProjectSource;
-		apiKey: string;
+		pod: Promise<BrowserPodInstance>;
 		defaultFile?: string;
-		apiDomain?: string | undefined;
 		/** Share context across isolated component trees (e.g. Astro islands).
 		 *  Components with the same ctxId share state without needing a common parent. */
 		ctxId?: string;
@@ -24,9 +23,8 @@
 
 	let {
 		projectSource,
-		apiKey,
+		pod,
 		defaultFile = '',
-		apiDomain = undefined,
 		ctxId = undefined,
 		onReady = () => {},
 		onPortal = () => {},
@@ -103,8 +101,7 @@
 	async function initializeEditor() {
 		// Create BrowserPod service
 		service = new BrowserPodService({
-			apiKey,
-			apiDomain,
+			pod,
 			onPortal: ({url, port}) => {
 				portalUrls.set(port, url);
 				onPortal({url, port});
@@ -114,8 +111,7 @@
 			}
 		});
 
-		// Boot BrowserPod (no terminal yet)
-		await service.boot();
+		await service.ready();
 		browserPodRunning.set(true);
 
 		// After boot, enhance registerTerminal so late-arriving terminals

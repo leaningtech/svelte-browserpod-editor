@@ -22,8 +22,7 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "peerDependencies": {
-    "svelte": "^5.0.0",
-    "@leaningtech/browserpod": "*"
+    "svelte": "^5.0.0"
   },
   "dependencies": {
     "@codemirror/lang-css": "^6.2.1",

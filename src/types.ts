@@ -56,8 +56,8 @@ export interface ProjectFile {
 export interface BrowserPodEditorProps {
   /** Project source configuration */
   projectSource: ProjectSource;
-  /** BrowserPod API key */
-  apiKey: string;
+  /** BrowserPod instance promise (from BrowserPod.boot()) */
+  pod: Promise<BrowserPodInstance>;
   /** File to open initially */
   defaultFile?: string;
   /** Show/hide sidebar */
@@ -66,15 +66,28 @@ export interface BrowserPodEditorProps {
   showTerminal?: boolean;
   /** Show/hide preview */
   showPreview?: boolean;
-  /** Optional BrowserPod API domain */
-  apiDomain?: string;
   /** Terminal tabs configuration */
   terminalTabs?: TerminalTab[];
 }
 
+export interface BrowserPodFileHandle {
+  getSize(): Promise<number>;
+  read(size: number): Promise<any>;
+  write(content: string | ArrayBuffer): Promise<void>;
+  close(): Promise<void>;
+}
+
+export interface BrowserPodInstance {
+  onPortal(callback: (data: { url: string; port: number }) => void): void;
+  createDefaultTerminal(element: HTMLElement): Promise<any>;
+  run(executable: string, args: string[], options?: { echo?: boolean; terminal?: any; cwd?: string }): Promise<void>;
+  createDirectory(path: string, options?: { recursive?: boolean }): Promise<void>;
+  createFile(path: string, encoding: 'utf-8' | 'binary'): Promise<BrowserPodFileHandle>;
+  openFile(path: string, encoding: 'utf-8' | 'binary'): Promise<BrowserPodFileHandle>;
+}
+
 export interface BrowserPodServiceOptions {
-  apiKey: string;
-  apiDomain?: string;
+  pod: Promise<BrowserPodInstance>;
   onPortal?: ({url, port}: {url: string, port: number}) => void;
   onError?: (error: Error) => void;
 }
