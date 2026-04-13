@@ -25,7 +25,7 @@
 	
 
 	// Editor registration
-	let editorId: number = $state();
+	let editorId: number = $state(0);
 	let content = $state('');
 	let loadedFilePath = '';  // Plain variable - not reactive, just tracks last loaded path
 

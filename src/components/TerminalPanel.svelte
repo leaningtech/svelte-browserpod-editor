@@ -37,7 +37,7 @@
 	// Track tabs activated before pod was ready
 	let pendingTabIds: string[] = $state([]);
 
-	let contentEl: HTMLDivElement = $state();
+	let contentEl: HTMLDivElement = $state(null!);
 	let resizeObserver: ResizeObserver;
 
 	function fitTerminal(xterm: any, container: HTMLElement) {
