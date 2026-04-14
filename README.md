@@ -12,6 +12,7 @@ npm install @leaningtech/svelte-browserpod-editor
 
 ```svelte
 <script>
+  import BrowserPod from '@leaningtech/browserpod';
   import {
     BrowserPodEditorProvider,
     EditorPanel,
@@ -20,17 +21,19 @@ npm install @leaningtech/svelte-browserpod-editor
     FileTree
   } from '@leaningtech/svelte-browserpod-editor';
   import '@leaningtech/svelte-browserpod-editor/theme.css';
+
+  const pod = BrowserPod.boot({ apiKey: 'your-api-key' });
 </script>
 
 <BrowserPodEditorProvider
   projectSource={{ type: 'local', path: '/project/' }}
-  apiKey="your-api-key"
+  {pod}
 >
   <FileTree />
   <EditorPanel />
   <PreviewPanel />
   <TerminalPanel tabs={[
-    { id: 'dev', label: 'Dev', commands: [['npm', 'run', 'dev']], autoRun: true }
+    { id: 'dev', label: 'Dev Server', onReady: (run) => run('npm', ['run', 'dev']) }
   ]} />
 </BrowserPodEditorProvider>
 ```
@@ -48,38 +51,59 @@ npm install @leaningtech/svelte-browserpod-editor
 
 ## Project Sources
 
-Load projects from three sources (currently only local and zip work. Zip requires
-appropriate CORS headers if used cross-origin):
+Load projects from three sources:
 
 ```typescript
 // Local files (requires manifest.txt in static directory)
 { type: 'local', path: '/projects/my-app' }
 
-// Direct zip URL
+// Direct zip URL (requires appropriate CORS headers if cross-origin)
 { type: 'zip', url: 'https://example.com/project.zip' }
 
-// GitHub repository
-{ type: 'github', repo: 'username/repo', branch: 'main' }
+// GitHub repository (fetched via VM to bypass CORS)
+{ type: 'github', owner: 'username', repo: 'my-repo', ref: 'main', path: 'subdir' }
 ```
 
 ## Terminal Configuration
 
+Tabs accept `onReady` and `onActivate` callbacks, each receiving a pre-bound `run(command, args?, options?)` function.
+
 ```svelte
-<TerminalPanel tabs={[
+<script>
+  let terminal;
+
+  function once(fn) {
+    let done = false;
+    return (run) => { if (!done) { done = true; fn(run); } };
+  }
+</script>
+
+<TerminalPanel bind:this={terminal} tabs={[
   {
     id: 'install',
     label: 'Install',
-    commands: [['npm', 'install']],
-    autoRun: true,        // Run when BrowserPod is ready
-    stopOnError: true     // Stop sequence if command fails
+    // onReady: runs when BrowserPod is ready
+    onReady: async (run) => {
+      await run('npm', ['install']);
+      await run('npm', ['run', 'dev']);
+    }
   },
   {
-    id: 'dev',
-    label: 'Dev Server',
-    commands: [['npm', 'run', 'dev']],
-    runOnActivate: true   // Run when tab is first clicked
+    id: 'repl',
+    label: 'REPL',
+    // onActivate: runs when the tab is clicked (wrap in once() to run only on first click)
+    onActivate: once((run) => run('node'))
   }
 ]} />
+
+<!-- Imperative control via bind:this -->
+<button onclick={() => terminal.run('npm', ['test'])}>Run tests</button>
+```
+
+The `run` method on `TerminalPanel` also accepts an optional `tabId` to target a specific tab:
+
+```typescript
+terminal.run('npm', ['test'], { tabId: 'install', cwd: '/home/user' });
 ```
 
 ## Multi-Editor Layout
