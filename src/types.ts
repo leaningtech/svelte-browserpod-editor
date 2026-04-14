@@ -53,22 +53,6 @@ export interface ProjectFile {
   content: Uint8Array;
 }
 
-export interface BrowserPodEditorProps {
-  /** Project source configuration */
-  projectSource: ProjectSource;
-  /** BrowserPod instance promise (from BrowserPod.boot()) */
-  pod: Promise<BrowserPodInstance>;
-  /** File to open initially */
-  defaultFile?: string;
-  /** Show/hide sidebar */
-  showSidebar?: boolean;
-  /** Show/hide terminal */
-  showTerminal?: boolean;
-  /** Show/hide preview */
-  showPreview?: boolean;
-  /** Terminal tabs configuration */
-  terminalTabs?: TerminalTab[];
-}
 
 export interface BrowserPodFileHandle {
   getSize(): Promise<number>;
@@ -98,18 +82,6 @@ export interface BrowserPodServiceOptions {
   onError?: (error: Error) => void;
 }
 
-export interface ReadyEventDetail {
-  service: unknown;
-}
-
-export interface PortalReadyEventDetail {
-  url: string;
-}
-
-export interface ErrorEventDetail {
-  type: string;
-  message: string;
-}
 
 export interface TerminalConfig {
   /** Unique identifier for the terminal */

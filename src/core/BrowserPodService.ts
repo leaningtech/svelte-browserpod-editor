@@ -63,7 +63,7 @@ export class BrowserPodService {
   /**
    * Get the underlying BrowserPod instance for advanced operations
    */
-  getPod(): any {
+  getPod(): BrowserPodInstance | null {
     return this.pod;
   }
 
@@ -115,19 +115,16 @@ export class BrowserPodService {
    * @param files Array of ProjectFile objects with path and content
    */
   async uploadProjectFiles(files: ProjectFile[]): Promise<void> {
-    if (!this.pod) {
-      throw new Error('BrowserPod not initialized');
-    }
-
-    await this.pod.createDirectory('/home/user');
+    const pod = await this.podPromise;
+    await pod.createDirectory('/home/user');
     for (const file of files) {
       const parts = file.path.split('/');
       if (parts.length > 1) {
         parts.pop();
         const dir = parts.join('/');
-        await this.pod.createDirectory(`/home/user/${dir}`, { recursive: true });
+        await pod.createDirectory(`/home/user/${dir}`, { recursive: true });
       }
-      const f = await this.pod.createFile(`/home/user/${file.path}`, 'binary');
+      const f = await pod.createFile(`/home/user/${file.path}`, 'binary');
       const copy = new Uint8Array(file.content);
       await f.write(copy.buffer);
       await f.close();
@@ -139,13 +136,10 @@ export class BrowserPodService {
    * @param filename File path relative to /home/user/
    */
   async loadFile(filename: string): Promise<string> {
-    if (!this.pod) {
-      throw new Error('BrowserPod not initialized');
-    }
-
+    const pod = await this.podPromise;
     const fullPath = `/home/user/${filename}`;
     try {
-      const f = await this.pod.openFile(fullPath, 'utf-8');
+      const f = await pod.openFile(fullPath, 'utf-8');
       const size = await f.getSize();
       const content = await f.read(size);
       await f.close();
@@ -155,25 +149,17 @@ export class BrowserPodService {
     }
   }
 
-  /**
-   * Save file content to BrowserPod
-   * @param filename File path relative to /home/user/
-   * @param content File content
-   */
   async saveFile(filename: string, content: string): Promise<boolean> {
-    if (!this.pod) {
-      throw new Error('BrowserPod not initialized');
-    }
-
+    const pod = await this.podPromise;
     const fullPath = `/home/user/${filename}`;
     try {
       const parts = filename.split('/');
       parts.pop();
       const dir = parts.join('/');
       if (dir) {
-        await this.pod.createDirectory(`/home/user/${dir}`, { recursive: true });
+        await pod.createDirectory(`/home/user/${dir}`, { recursive: true });
       }
-      const f = await this.pod.createFile(fullPath, 'utf-8');
+      const f = await pod.createFile(fullPath, 'utf-8');
       await f.write(content);
       await f.close();
       console.log('File saved:', filename);
@@ -192,13 +178,9 @@ export class BrowserPodService {
    * @returns ArrayBuffer of the response
    */
   async fetchUrl(url: string, terminalId?: string): Promise<ArrayBuffer> {
-    if (!this.pod) {
-      throw new Error('BrowserPod not initialized');
-    }
-
+    const pod = await this.podPromise;
     const terminal = terminalId ? this.terminals.get(terminalId) : this.terminal;
 
-    // Write a simple fetch script
     const script = `
       const fs = require('fs');
       async function main() {
@@ -210,19 +192,14 @@ export class BrowserPodService {
       main().catch(e => { console.error(e); process.exit(1); });
     `;
 
-    await this.pod.createDirectory("/tmp/");
-    const scriptFile = await this.pod.createFile('/tmp/fetch.js', 'utf-8');
+    await pod.createDirectory("/tmp/");
+    const scriptFile = await pod.createFile('/tmp/fetch.js', 'utf-8');
     await scriptFile.write(script);
     await scriptFile.close();
 
-    await this.pod.run('node', ['/tmp/fetch.js'], {
-      echo: true,
-      terminal,
-      cwd: '/',
-    });
+    await pod.run('node', ['/tmp/fetch.js'], { echo: true, terminal, cwd: '/' });
 
-    // Read the fetched data
-    const dataFile = await this.pod.openFile('/tmp/fetched', 'binary');
+    const dataFile = await pod.openFile('/tmp/fetched', 'binary');
     const size = await dataFile.getSize();
     const content = await dataFile.read(size);
     await dataFile.close();

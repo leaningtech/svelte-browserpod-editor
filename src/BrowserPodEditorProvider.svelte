@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy, createEventDispatcher, tick } from 'svelte';
+	import { onMount, onDestroy, tick } from 'svelte';
 	import { get } from 'svelte/store';
 	import { createBrowserPodEditorContext, getOrCreateStandaloneContext } from './context.ts';
 	import { BrowserPodService } from './core/BrowserPodService.ts';
