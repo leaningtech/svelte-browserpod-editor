@@ -4,7 +4,7 @@
 import { getContext, setContext } from 'svelte';
 import { get, writable, type Writable } from 'svelte/store';
 import { SvelteMap } from 'svelte/reactivity';
-import type { TreeNode, TerminalConfig, EditorConfig } from './types.ts';
+import type { RunCommandOptions, TreeNode, TerminalConfig, EditorConfig } from './types.ts';
 
 const CONTEXT_KEY = Symbol('BrowserPodEditor');
 
@@ -33,10 +33,8 @@ export interface BrowserPodEditorContext {
   registerTerminal: (config: TerminalConfig) => void;
   /** Unregister a terminal panel */
   unregisterTerminal: (id: string) => void;
-  /** Run a single command in a specific terminal */
-  runCommand: (terminalId: string, command: string[], cwd?: string) => Promise<void>;
-  /** Run multiple commands sequentially in a specific terminal */
-  runCommands: (terminalId: string, commands: string[][], stopOnError?: boolean, cwd?: string) => Promise<void>;
+  /** Run a command in a specific terminal */
+  runCommand: (terminalId: string, command: string, args: string[], options?: RunCommandOptions) => Promise<void>;
   /** Get a terminal instance by ID */
   getTerminal: (id: string) => any;
   /** Register an editor panel and return assigned ID */
@@ -88,7 +86,6 @@ function _createContext(): BrowserPodEditorContext {
       });
     },
     runCommand: async () => {},
-    runCommands: async () => {},
     getTerminal: (id: string) => get(terminals).get(id)?.terminal,
     registerEditor: () => {
       const id = nextEditorId++;

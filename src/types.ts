@@ -77,10 +77,16 @@ export interface BrowserPodFileHandle {
   close(): Promise<void>;
 }
 
+export interface RunCommandOptions {
+  cwd?: string;
+  env?: Record<string, string>;
+  echo?: boolean;
+}
+
 export interface BrowserPodInstance {
   onPortal(callback: (data: { url: string; port: number }) => void): void;
   createDefaultTerminal(element: HTMLElement): Promise<any>;
-  run(executable: string, args: string[], options?: { echo?: boolean; terminal?: any; cwd?: string }): Promise<void>;
+  run(executable: string, args: string[], options?: RunCommandOptions & { terminal?: any }): Promise<void>;
   createDirectory(path: string, options?: { recursive?: boolean }): Promise<void>;
   createFile(path: string, encoding: 'utf-8' | 'binary'): Promise<BrowserPodFileHandle>;
   openFile(path: string, encoding: 'utf-8' | 'binary'): Promise<BrowserPodFileHandle>;
@@ -108,33 +114,22 @@ export interface ErrorEventDetail {
 export interface TerminalConfig {
   /** Unique identifier for the terminal */
   id: string;
-  /** Sequential commands to run: [[executable, ...args], ...] */
-  commands?: string[][];
-  /** Whether to auto-run the commands when ready */
-  autoRun?: boolean;
-  /** Stop executing if a command fails (default: true) */
-  stopOnError?: boolean;
-  /** Working directory for commands (defaults to BrowserPod's default) */
-  cwd?: string;
   /** Internal: the terminal instance */
   terminal?: any;
 }
+
+/** Function to run a command in a specific terminal tab, pre-bound to that tab. */
+export type TabRun = (command: string, args?: string[], options?: RunCommandOptions) => Promise<void>;
 
 export interface TerminalTab {
   /** Unique ID for this tab's terminal */
   id: string;
   /** Display label for the tab */
   label: string;
-  /** Sequential commands to run: [[executable, ...args], ...] */
-  commands?: string[][];
-  /** Run commands immediately when BrowserPod is ready */
-  autoRun?: boolean;
-  /** Run commands lazily when tab is first clicked */
-  runOnActivate?: boolean;
-  /** Stop executing if a command fails (default: true) */
-  stopOnError?: boolean;
-  /** Working directory for commands (defaults to BrowserPod's default) */
-  cwd?: string;
+  /** Called when BrowserPod is ready and this tab's terminal is initialized */
+  onReady?: (run: TabRun) => void;
+  /** Called when this tab becomes active */
+  onActivate?: (run: TabRun) => void;
 }
 
 export interface EditorConfig {

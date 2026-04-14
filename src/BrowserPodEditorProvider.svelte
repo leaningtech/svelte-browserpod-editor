@@ -53,23 +53,9 @@
 		return service.saveFile(filename, content);
 	};
 
-	ctx.runCommand = async (terminalId: string, command: string[], cwd?: string) => {
+	ctx.runCommand = async (terminalId: string, command: string, args: string[], options?) => {
 		if (!service) throw new Error('Service not initialized');
-		return service.runCommand(command, terminalId, { cwd });
-	};
-
-	ctx.runCommands = async (terminalId: string, commands: string[][], stopOnError = true, cwd?: string) => {
-		if (!service) throw new Error('Service not initialized');
-		for (const command of commands) {
-			try {
-				await service.runCommand(command, terminalId, { cwd });
-			} catch (e) {
-				console.error(`Command failed: ${command.join(' ')}`, e);
-				if (stopOnError) {
-					throw e;
-				}
-			}
-		}
+		return service.runCommand(command, args, terminalId, options);
 	};
 
 	onMount(async () => {
@@ -115,15 +101,11 @@
 		browserPodRunning.set(true);
 
 		// After boot, enhance registerTerminal so late-arriving terminals
-		// (e.g. from separate Astro islands) are created and started automatically.
+		// (e.g. from separate Astro islands) are created automatically.
 		const origRegister = ctx.registerTerminal;
 		ctx.registerTerminal = (config) => {
 			origRegister(config);
-			createTerminalInstance(config).then(() => {
-				if (config.autoRun && config.commands && config.commands.length > 0) {
-					ctx.runCommands(config.id, config.commands, config.stopOnError ?? true, config.cwd);
-				}
-			});
+			createTerminalInstance(config);
 		};
 
 		// Wait for child components to mount and register terminals
@@ -172,14 +154,6 @@
 		}
 
 		onReady(service);
-
-		// Run all autoRun commands in parallel (all terminals are created by now)
-		const terminalsToRun = get(terminals);
-		await Promise.all(
-			[...terminalsToRun.values()]
-				.filter(config => config.autoRun && config.commands && config.commands.length > 0)
-				.map(config => ctx.runCommands(config.id, config.commands!, config.stopOnError ?? true, config.cwd))
-		);
 	}
 
 	// Expose service for advanced usage

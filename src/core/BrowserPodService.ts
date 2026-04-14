@@ -1,7 +1,7 @@
 /**
  * BrowserPodService - Class-based wrapper for BrowserPod
  */
-import type { BrowserPodInstance, BrowserPodServiceOptions, ProjectFile } from '../types.ts';
+import type { BrowserPodInstance, BrowserPodServiceOptions, ProjectFile, RunCommandOptions } from '../types.ts';
 import { trackEvent } from '../utils.ts';
 
 export class BrowserPodService {
@@ -86,30 +86,27 @@ export class BrowserPodService {
   }
 
   /**
-   * Run a command in a specific terminal
-   * @param command Array of command parts [executable, ...args]
-   * @param terminalId Terminal to run in (uses default if not specified)
-   * @param options Additional options (cwd, echo)
+   * Run a command in a specific terminal.
+   * Waits for the pod to be ready before executing.
    */
   async runCommand(
-    command: string[],
+    command: string,
+    args: string[],
     terminalId?: string,
-    options: { cwd?: string; echo?: boolean } = {}
+    options: RunCommandOptions = {}
   ): Promise<void> {
-    if (!this.pod) {
-      throw new Error('BrowserPod not initialized');
-    }
+    const pod = await this.podPromise;
 
     const terminal = terminalId ? this.terminals.get(terminalId) : this.terminal;
     if (!terminal) {
       throw new Error(`Terminal ${terminalId || 'default'} not found`);
     }
 
-    const [executable, ...args] = command;
-    await this.pod.run(executable, args, {
+    await pod.run(command, args, {
       echo: options.echo ?? true,
       terminal,
       cwd: options.cwd,
+      env: options.env,
     });
   }
 

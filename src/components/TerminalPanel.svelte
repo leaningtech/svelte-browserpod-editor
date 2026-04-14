@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import Container from './Container.svelte';
 	import { resolveContext } from '../context.ts';
-	import type { TerminalTab } from '../types.ts';
+	import type { RunCommandOptions, TabRun, TerminalTab } from '../types.ts';
 
 	interface Props {
 		/** Configuration for terminal tabs */
@@ -18,9 +18,7 @@
 	}
 
 	let {
-		tabs = [
-		{ id: 'terminal', label: 'Terminal', commands: [['/npm/bin/npm.js', 'install']], autoRun: true },
-	],
+		tabs = [{ id: 'terminal', label: 'Terminal' }],
 		activeTab = $bindable(tabs[0]?.id || ''),
 		title = 'Terminal',
 		icon = 'mdi:terminal',
@@ -30,15 +28,15 @@
 
 
 	const ctx = (() => resolveContext(ctxId))();
-	const { browserPodRunning } = ctx;
+	const { terminals } = ctx;
 
-	// Track which lazy tabs have been started
-	let startedTabs = new Set<string>();
-	// Track tabs activated before pod was ready
-	let pendingTabIds: string[] = $state([]);
+	function makeRunner(tabId: string): TabRun {
+		return (command, args = [], options) => ctx.runCommand(tabId, command, args, options);
+	}
 
 	let contentEl: HTMLDivElement = $state(null!);
 	let resizeObserver: ResizeObserver;
+	let onReadyUnsubs: (() => void)[] = [];
 
 	function fitTerminal(xterm: any, container: HTMLElement) {
 		if (!xterm || !container) return;
@@ -60,15 +58,19 @@
 	}
 
 	onMount(() => {
-		// Register all terminals
 		for (const tab of tabs) {
-			ctx.registerTerminal({
-				id: tab.id,
-				commands: tab.commands,
-				autoRun: tab.autoRun ?? false,
-				stopOnError: tab.stopOnError ?? true,
-				cwd: tab.cwd
-			});
+			ctx.registerTerminal({ id: tab.id });
+
+			if (tab.onReady) {
+				const runner = makeRunner(tab.id);
+				const unsub = terminals.subscribe(map => {
+					if (map.get(tab.id)?.terminal) {
+						unsub();
+						tab.onReady!(runner);
+					}
+				});
+				onReadyUnsubs.push(unsub);
+			}
 		}
 
 		resizeObserver = new ResizeObserver(() => {
@@ -85,43 +87,25 @@
 
 	onDestroy(() => {
 		resizeObserver?.disconnect();
+		onReadyUnsubs.forEach(u => u());
 		for (const tab of tabs) {
 			ctx.unregisterTerminal(tab.id);
 		}
 	});
 
-	function startTab(tab: TerminalTab) {
-		if (startedTabs.has(tab.id)) return;
-		startedTabs.add(tab.id);
-		startedTabs = startedTabs; // trigger reactivity
-		ctx.runCommands(tab.id, tab.commands!, tab.stopOnError ?? true, tab.cwd);
-	}
-
 	function handleTabClick(tab: TerminalTab) {
 		activeTab = tab.id;
-
-		// Handle lazy-start terminals
-		if (tab.runOnActivate && tab.commands && tab.commands.length > 0) {
-			if ($browserPodRunning) {
-				startTab(tab);
-			} else if (!pendingTabIds.includes(tab.id)) {
-				// Mark as pending — the $effect below will start it once the pod is ready
-				pendingTabIds = [...pendingTabIds, tab.id];
-			}
-		}
+		tab.onActivate?.(makeRunner(tab.id));
 	}
 
-	// When pod becomes ready, start any tabs that were activated while waiting
-	$effect(() => {
-		if ($browserPodRunning && pendingTabIds.length > 0) {
-			for (const tab of tabs) {
-				if (pendingTabIds.includes(tab.id) && tab.commands && tab.commands.length > 0) {
-					startTab(tab);
-				}
-			}
-			pendingTabIds = [];
-		}
-	});
+	/**
+	 * Run a command in the specified tab's terminal (defaults to the active tab).
+	 * Returns a promise that resolves when the command completes.
+	 */
+	export function run(command: string, args: string[] = [], options?: RunCommandOptions & { tabId?: string }): Promise<void> {
+		const { tabId, ...runOptions } = options ?? {};
+		return ctx.runCommand(tabId ?? activeTab, command, args, runOptions);
+	}
 </script>
 
 <Container

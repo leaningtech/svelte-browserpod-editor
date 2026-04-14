@@ -37,6 +37,8 @@ export type {
   FileNode,
   BrowserPodFileHandle,
   BrowserPodInstance,
+  RunCommandOptions,
+  TabRun,
   ProjectSource,
   LocalProjectSource,
   ZipProjectSource,
