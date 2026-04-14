@@ -116,7 +116,7 @@ export class BrowserPodService {
    */
   async uploadProjectFiles(files: ProjectFile[]): Promise<void> {
     const pod = await this.podPromise;
-    await pod.createDirectory('/home/user');
+    await pod.createDirectory('/home/user', { recursive: true });
     for (const file of files) {
       const parts = file.path.split('/');
       if (parts.length > 1) {
