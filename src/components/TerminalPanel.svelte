@@ -34,28 +34,7 @@
 		return (command, args = [], options) => ctx.runCommand(tabId, command, args, options);
 	}
 
-	let contentEl: HTMLDivElement = $state(null!);
-	let resizeObserver: ResizeObserver;
 	let onReadyUnsubs: (() => void)[] = [];
-
-	function fitTerminal(xterm: any, container: HTMLElement) {
-		if (!xterm || !container) return;
-
-		const core = xterm._core;
-		const dims = core._renderService?.dimensions;
-		if (!dims) return;
-
-		const cellWidth = dims.css.cell.width;
-		const cellHeight = dims.css.cell.height;
-		if (!cellWidth || !cellHeight) return;
-
-		const cols = Math.max(2, Math.floor(container.clientWidth / cellWidth));
-		const rows = Math.max(1, Math.floor(container.clientHeight / cellHeight));
-
-		if (xterm.cols !== cols || xterm.rows !== rows) {
-			xterm.resize(cols, rows);
-		}
-	}
 
 	onMount(() => {
 		for (const tab of tabs) {
@@ -72,21 +51,9 @@
 				onReadyUnsubs.push(unsub);
 			}
 		}
-
-		resizeObserver = new ResizeObserver(() => {
-			for (const tab of tabs) {
-				const terminal = ctx.getTerminal(tab.id);
-				const pane = document.getElementById(tab.id);
-				if (terminal?.xterm && pane) {
-					fitTerminal(terminal.xterm, pane);
-				}
-			}
-		});
-		resizeObserver.observe(contentEl);
 	});
 
 	onDestroy(() => {
-		resizeObserver?.disconnect();
 		onReadyUnsubs.forEach(u => u());
 		for (const tab of tabs) {
 			ctx.unregisterTerminal(tab.id);
@@ -130,7 +97,7 @@
 		</div>
 	{/snippet}
 
-	<div class="terminal-content" bind:this={contentEl}>
+	<div class="terminal-content">
 		{#each tabs as tab}
 			<div
 				class="terminal-pane"
