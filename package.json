@@ -22,15 +22,16 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "peerDependencies": {
-    "svelte": "^5.0.0"
-  },
-  "dependencies": {
-    "@codemirror/lang-css": "^6.2.1",
+    "svelte": "^5.0.0",
+	"@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.7",
     "@codemirror/lang-javascript": "^6.2.5",
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/theme-one-dark": "^6.1.2",
-    "@codemirror/view": "^6.41.0",
+    "@codemirror/view": "^6.41.0"
+  },
+  "dependencies": {
+   
     "@iconify/svelte": "^5.2.1",
     "jszip": "^3.10.1",
     "qrcode": "^1.5.4",
